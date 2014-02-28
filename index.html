@@ -1,64 +1,61 @@
 <!DOCTYPE HTML>
 <html manifest="" lang="en-US">
+
 <head>
-    <meta charset="UTF-8">
-    <title>LifeDJTU</title>
-    <style type="text/css">
-         /**
-         * Example of an initial loading indicator.
-         * It is recommended to keep this as minimal as possible to provide instant feedback
-         * while other resources are still being loaded for the first time
-         */
-        html, body {
-            height: 100%;
-            background-color: #1985D0
-        }
-
-        #appLoadingIndicator {
-            position: absolute;
-            top: 50%;
-            margin-top: -15px;
-            text-align: center;
-            width: 100%;
-            height: 30px;
-            -webkit-animation-name: appLoadingIndicator;
-            -webkit-animation-duration: 0.5s;
-            -webkit-animation-iteration-count: infinite;
-            -webkit-animation-direction: linear;
-        }
-
-        #appLoadingIndicator > * {
-            background-color: #FFFFFF;
-            display: inline-block;
-            height: 30px;
-            -webkit-border-radius: 15px;
-            margin: 0 5px;
-            width: 30px;
-            opacity: 0.8;
-        }
-
-        @-webkit-keyframes appLoadingIndicator{
-            0% {
-                opacity: 0.8
-            }
-            50% {
-                opacity: 0
-            }
-            100% {
-                opacity: 0.8
-            }
-        }
-    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LifeDjtu--人在交大</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="res/css/bootstrap.css">
+    <link rel="stylesheet" href="res/css/bootstrap-theme.css">
+    <link rel="stylesheet"  href="res/css/jquery.mobile-1.4.1.css">
+    <link rel="stylesheet" href="res/css/app.css">
+    <script src="res/js/jquery.js"></script>
+    <script src="app/index.js"></script>
+    <script src="res/js/jquery.mobile-1.4.1.js"></script>
+    <script src="res/js/bootstrap.js"></script>
+</head>
+<head>
     <!-- The line below must be kept intact for Sencha Command to build your application -->
-    <script id="microloader" type="text/javascript" src="touch/microloader/development.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
 </head>
+
 <body>
-    <!--<div style="height: 20px;background-color: #ffffff"></div>-->
-    <div id="appLoadingIndicator">
-        <div></div>
-        <div></div>
-        <div></div>
+    <div></div>
+
+    <div data-role="panel" id="leftpanel" data-position="left" data-display="reveal" data-theme="a">
+        <br>
+        <br>
+        <button class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-grid">我的课表</button>
+        <button class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-user">我的资料</button>
+        <button class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-calendar">我的考试</button>
+        <button class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-check">我的成绩</button>
+        <button class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-mail">消息</button>
+        <button class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-gear">设置</button>
+    </div><!-- /leftpanel1 -->
+
+    <div data-role="panel" style="width: 130px"  id="rightpanel" data-position="right" data-display="overlay" data-theme="b">
+        <a href="#" data-rel="close" class="ui-btn ui-btn-inline ui-icon-delete ui-btn-icon-left">关闭</a>
+        <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-search ui-btn-icon-bottom">查教室</a>
+        <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-bars ui-btn-icon-bottom">看资讯</a>
+    </div><!-- /rightpanel3 -->
+
+    <div data-role="page" id="course-table" data-url="course-table">
+        <div style="margin-top: 20px" data-role="header" data-theme="a" data-position="fixed">
+            <h1>Week <span class="lead"><strong>1</strong></span></h1>
+            <a href="#leftpanel" data-icon="carat-r" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-grid ui-corner-all ui-btn-icon-notext">Open left panel</a>
+            <a href="#rightpanel" data-icon="carat-l" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-bullets ui-corner-all ui-btn-icon-notext">Open right panel</a>
+        </div><!-- /header -->
+        <div role="main" class="ui-content">
+            <br>
+            
+            <dl>
+                <dt>Swipe <span>verb</span></dt>
+                <dd><b>1.</b> to strike or move with a sweeping motion</dd>
+            </dl>
+            <a href="#demo-intro" data-rel="back" class="back-btn ui-btn ui-corner-all ui-shadow ui-mini ui-btn-inline ui-icon-back ui-btn-icon-right">Back to demo intro</a>
+        </div><!-- /content -->
     </div>
 </body>
+
 </html>
