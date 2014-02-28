@@ -8514,6 +8514,7 @@ jQuery.parseJSON = function( data ) {
 	if ( window.JSON && window.JSON.parse ) {
 		// Support: Android 2.3
 		// Workaround failure to string-cast null input
+        //alert(data);
 		return window.JSON.parse( data + "" );
 	}
 

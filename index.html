@@ -11,51 +11,92 @@
     <link rel="stylesheet"  href="res/css/jquery.mobile-1.4.1.css">
     <link rel="stylesheet" href="res/css/app.css">
     <script src="res/js/jquery.js"></script>
-    <script src="app/index.js"></script>
     <script src="res/js/jquery.mobile-1.4.1.js"></script>
     <script src="res/js/bootstrap.js"></script>
-</head>
-<head>
-    <!-- The line below must be kept intact for Sencha Command to build your application -->
     <script type="text/javascript" src="cordova.js"></script>
+
+    <script src="app/util.js"></script>
+    <script src="app/index.js"></script>
 </head>
 
 <body>
     <div></div>
-
-    <div data-role="panel" id="leftpanel" data-position="left" data-display="reveal" data-theme="a">
-        <br>
-        <br>
-        <button class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-grid">我的课表</button>
-        <button class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-user">我的资料</button>
-        <button class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-calendar">我的考试</button>
-        <button class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-check">我的成绩</button>
-        <button class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-mail">消息</button>
-        <button class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-gear">设置</button>
-    </div><!-- /leftpanel1 -->
-
-    <div data-role="panel" style="width: 130px"  id="rightpanel" data-position="right" data-display="overlay" data-theme="b">
-        <a href="#" data-rel="close" class="ui-btn ui-btn-inline ui-icon-delete ui-btn-icon-left">关闭</a>
-        <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-search ui-btn-icon-bottom">查教室</a>
-        <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-bars ui-btn-icon-bottom">看资讯</a>
-    </div><!-- /rightpanel3 -->
-
-    <div data-role="page" id="course-table" data-url="course-table">
-        <div style="margin-top: 20px" data-role="header" data-theme="a" data-position="fixed">
-            <h1>Week <span class="lead"><strong>1</strong></span></h1>
-            <a href="#leftpanel" data-icon="carat-r" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-grid ui-corner-all ui-btn-icon-notext">Open left panel</a>
-            <a href="#rightpanel" data-icon="carat-l" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-bullets ui-corner-all ui-btn-icon-notext">Open right panel</a>
-        </div><!-- /header -->
+    <div data-role="page" id="userExist">
         <div role="main" class="ui-content">
             <br>
-            
-            <dl>
-                <dt>Swipe <span>verb</span></dt>
-                <dd><b>1.</b> to strike or move with a sweeping motion</dd>
-            </dl>
-            <a href="#demo-intro" data-rel="back" class="back-btn ui-btn ui-corner-all ui-shadow ui-mini ui-btn-inline ui-icon-back ui-btn-icon-right">Back to demo intro</a>
+            <br>
+            <h1 class="lead text-center" style="font-size: 50px">Life Djtu</h1>
+            <h4 class="text-info text-muted text-center">人在交大</h4>
+            <br>
+            <div class="form-group">
+                <span class="help-block"><span class="lead">输入您的教务在线学号，登陆或创建账户</span></span>
+                <input type="text" class="form-control" id="studentId" name="studentId" placeholder="您的学号,例如1018110331">
+            </div>
+            <a href="#nextstep"  data-transition="slide" class="ui-btn ui-shadow ui-corner-all ui-btn-b">下一步</a>
+            <a style="display: none" href="#signin"  data-transition="slide" class="ui-btn ui-shadow ui-corner-all ui-btn-b">下一步</a>
+            <a style="display: none" href="#signup"  data-transition="slide" class="ui-btn ui-shadow ui-corner-all ui-btn-b">下一步</a>
+
         </div><!-- /content -->
-    </div>
+
+
+    </div><!-- /page -->
+
+    <div data-role="page" id="signin">
+        <div role="main" class="ui-content">
+            <br>
+            <br>
+            <h1 class="lead text-center" style="font-size: 50px">Life Djtu</h1>
+            <h4 class="text-info text-muted text-center">人在交大</h4>
+            <br>
+            <div class="form-group">
+                <label for="signin-password" class="text-center lead">您正在以<span class="text text-info lead span-studentId">...</span>登录到人在交大</label>
+                <input type="password" class="form-control" id="signin-password" name="password" placeholder="输入密码">
+            </div>
+            <a href="#nextstep" data-ajax="false" data-transition="pop" class="ui-btn ui-shadow ui-corner-all ui-btn-b">登陆</a>
+            <a style="display: none" href="app.html" data-ajax="false" data-transition="pop" class="ui-btn ui-shadow ui-corner-all ui-btn-b">登陆</a>
+        </div><!-- /content -->
+    </div><!-- /page -->
+
+    <div data-role="page" id="signup">
+        <div role="main" class="ui-content">
+            <br>
+            <br>
+            <h1 class="lead text-center" style="font-size: 50px">Life Djtu</h1>
+            <h4 class="text-info text-muted text-center">人在交大</h4>
+            <br>
+            <div class="form-group">
+                <label for="signup-password" class="text-center lead">创建一个新账户: <span class="text text-warning lead span-studentId">...</span></label>
+                <input type="password" class="form-control" id="signup-password" name="password" placeholder="设置密码">
+            </div>
+            <a href="#prepareUser" data-transition="slide" class="ui-btn ui-shadow ui-corner-all ui-btn-b">创建账户</a>
+        </div><!-- /content -->
+    </div><!-- /page -->
+
+    <div data-role="page" id="prepareUser">
+        <div role="main" class="ui-content">
+            <br>
+            <br>
+            <h1 class="lead text-center" style="font-size: 50px">Life Djtu</h1>
+            <h4 class="text-info text-muted text-center">人在交大</h4>
+            <br>
+            <h4 class="text-center text-muted"><span class="glyphicon glyphicon-list text-info"></span> 还差几步,就要成功啦</h4>
+            <br>
+            <div class="list-group text-center">
+                <a class="list-group-item">
+                    <span class="text-success">获取用户资料信息<span class="glyphicon glyphicon-ok"></span></span>
+                </a>
+                <a class="list-group-item active">
+                    <span class="">获取用户课程信息<span class="glyphicon glyphicon-refresh"></span></span>
+                </a>
+                <a class="list-group-item">
+                    <span class="text-muted">获取用户考试信息</span>
+                </a>
+            </div>
+            <br>
+            <a href="app.html" data-ajax="false" data-transition="pop" class="ui-btn ui-btn-b"> <!--style="display: none"-->开始使用吧</a>
+        </div><!-- /content -->
+    </div><!-- /page -->
+
 </body>
 
 </html>
