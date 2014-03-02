@@ -2,3 +2,9 @@
 .fixed-header{
     height: 20px;
 }
+
+html,body{
+    padding:0;
+    margin:0;
+    height:100%;
+}

@@ -23,7 +23,7 @@
 <body>
     <div></div>
 
-    <div data-role="panel" id="leftpanel" data-position="left" data-display="reveal" data-theme="a">
+    <div data-position-fixed="true" data-role="panel" id="leftpanel" data-position="left" data-display="reveal" data-theme="a">
         <br>
         <br>
         <button class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-grid">我的课表</button>
@@ -37,7 +37,7 @@
         <button class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-power" data-theme="b">退出登陆</button>
     </div><!-- /leftpanel1 -->
 
-    <div data-role="panel" style="width: 130px"  id="rightpanel" data-position="right" data-display="overlay" data-theme="b">
+    <div data-position-fixed="true" data-role="panel" style="width: 130px"  id="rightpanel" data-position="right" data-display="overlay" data-theme="b">
         <a href="#" data-rel="close" class="ui-btn ui-btn-inline ui-icon-delete ui-btn-icon-left">关闭</a>
         <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-bars ui-btn-icon-bottom">看资讯</a>
         <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-search ui-btn-icon-bottom">查教室</a>
@@ -52,14 +52,148 @@
             <a href="#leftpanel" data-icon="carat-r" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-grid ui-corner-all ui-btn-icon-notext">Open left panel</a>
             <a href="#rightpanel" data-icon="carat-l" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-bullets ui-corner-all ui-btn-icon-notext">Open right panel</a>
         </div><!-- /header -->
-        <div role="main" class="ui-content">
+        <div role="main" class="container-fluid" style="padding-left: 0px;padding-right: 0px">
             <br>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                            <th></th>
+                            <th>星期一</th>
+                            <th>星期二</th>
+                            <th>星期三</th>
+                            <th>星期四</th>
+                            <th>星期五</th>
+                            <th>星期六</th>
+                            <th>星期日</th>
+                            </thead>
+                            <tr>
+                                <td>1</td>
+                                <td class="active">...</td>
+                                <td class="success">...</td>
+                                <td class="warning">...</td>
+                                <td class="danger">...</td>
+                                <td class="info">...</td>
+                                <td class="active">...</td>
+                                <td class="success">...</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td class="active">...</td>
+                                <td class="success">...</td>
+                                <td class="warning">...</td>
+                                <td class="danger">...</td>
+                                <td class="info">...</td>
+                                <td class="active">...</td>
+                                <td class="success">...</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td class="active">...</td>
+                                <td class="success">...</td>
+                                <td class="warning">...</td>
+                                <td class="danger">...</td>
+                                <td class="info">...</td>
+                                <td class="active">...</td>
+                                <td class="success">...</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td class="active">...</td>
+                                <td class="success">...</td>
+                                <td class="warning">...</td>
+                                <td class="danger">...</td>
+                                <td class="info">...</td>
+                                <td class="active">...</td>
+                                <td class="success">...</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td class="active">...</td>
+                                <td class="success">...</td>
+                                <td class="warning">...</td>
+                                <td class="danger">...</td>
+                                <td class="info">...</td>
+                                <td class="active">...</td>
+                                <td class="success">...</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td class="active">...</td>
+                                <td class="success">...</td>
+                                <td class="warning">...</td>
+                                <td class="danger">...</td>
+                                <td class="info">...</td>
+                                <td class="active">...</td>
+                                <td class="success">...</td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td class="active">...</td>
+                                <td class="success">...</td>
+                                <td class="warning">...</td>
+                                <td class="danger">...</td>
+                                <td class="info">...</td>
+                                <td class="active">...</td>
+                                <td class="success">...</td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td class="active">...</td>
+                                <td class="success">...</td>
+                                <td class="warning">...</td>
+                                <td class="danger">...</td>
+                                <td class="info">...</td>
+                                <td class="active">...</td>
+                                <td class="success">...</td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td class="active">...</td>
+                                <td class="success">...</td>
+                                <td class="warning">...</td>
+                                <td class="danger">...</td>
+                                <td class="info">...</td>
+                                <td class="active">...</td>
+                                <td class="success">...</td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td class="active">...</td>
+                                <td class="success">...</td>
+                                <td class="warning">...</td>
+                                <td class="danger">...</td>
+                                <td class="info">...</td>
+                                <td class="active">...</td>
+                                <td class="success">...</td>
+                            </tr>
+                            <tr>
+                                <td>11</td>
+                                <td class="active">...</td>
+                                <td class="success">...</td>
+                                <td class="warning">...</td>
+                                <td class="danger">...</td>
+                                <td class="info">...</td>
+                                <td class="active">...</td>
+                                <td class="success">...</td>
+                            </tr>
+                            <tr>
+                                <td>12</td>
+                                <td class="active">...</td>
+                                <td class="success">...</td>
+                                <td class="warning">...</td>
+                                <td class="danger">...</td>
+                                <td class="info">...</td>
+                                <td class="active">...</td>
+                                <td class="success">...</td>
+                            </tr>
+                        </table>
+                    </div>
 
-            <dl>
-                <dt>Swipe <span>verb</span></dt>
-                <dd><b>1.</b> to strike or move with a sweeping motion</dd>
-            </dl>
-            <a href="#demo-intro" data-rel="back" class="back-btn ui-btn ui-corner-all ui-shadow ui-mini ui-btn-inline ui-icon-back ui-btn-icon-right">Back to demo intro</a>
+                </div>
+            </div>
+            <!--<a href="#demo-intro" data-rel="back" class="back-btn ui-btn ui-corner-all ui-shadow ui-mini ui-btn-inline ui-icon-back ui-btn-icon-right">Back to demo intro</a>-->
         </div><!-- /content -->
     </div>
 </body>
