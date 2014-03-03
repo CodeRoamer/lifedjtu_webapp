@@ -1,7 +1,7 @@
 
 
 $(function() {
-
+    clearCache();
 //    //初始化全部的panel
 //    $( "body>[data-role='panel']" ).panel();
 
@@ -153,7 +153,7 @@ $(function() {
         },function(data,text,xhqr){
             if(data.flag==2){
                 if(window.localStorage){
-                    window.localStorage.setItem("userInfo",data);
+                    window.localStorage.setItem("userInfo",JSON.stringify(data));
 
                     $(userInfoItem).removeClass('active');
                     $(userInfoItem).children('span').children('span').attr('class','glyphicon glyphicon-ok');
@@ -184,7 +184,7 @@ $(function() {
         },function(data,text,xhqr){
             if(data.flag==2){
                 if(window.localStorage){
-                    window.localStorage.setItem("courseInfo",data);
+                    window.localStorage.setItem("courseInfo",JSON.stringify(data));
 
                     $(courseInfoItem).removeClass('active');
                     $(courseInfoItem).children('span').children('span').attr('class','glyphicon glyphicon-ok');
@@ -215,7 +215,7 @@ $(function() {
         },function(data,text,xhqr){
             if(data.flag==2){
                 if(window.localStorage){
-                    window.localStorage.setItem("examInfo",data);
+                    window.localStorage.setItem("examInfo",JSON.stringify(data));
 
                     var examInfoItem = itemDoms[index];
                     $(examInfoItem).removeClass('active');

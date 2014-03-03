@@ -7,5 +7,7 @@ $(function() {
     $( "body>[data-role='panel']" ).panel();
 
     initCourseTable();
+
+    ensureRenderExamInfo();
 });
 
