@@ -1,9 +1,8 @@
 
 
 $(function() {
-    clearCache();
-//    //初始化全部的panel
-//    $( "body>[data-role='panel']" ).panel();
+    //程序一启动，就执行。
+    getDjtuDate();
 
     //userExist
     $("#userExist a[href='#nextstep']").click(function(event){
@@ -13,12 +12,12 @@ $(function() {
         var studentId = $("#studentId").val();
 
         if(!studentId){
-            handleError();
+            handleWarning("学号不可为空，请填写字段");
             return;
         }
 
         //show Indicator
-        triggerLoad();
+        triggerLoad("正在验证用户");
 
         getJSON("webservice/checkUser.action",{
             studentId:studentId
@@ -29,17 +28,18 @@ $(function() {
                 if(data.exist){
                     //$.mobile.navigate("#signin");
                     //window.location.hash="signin";
-                    $("a[href='#signin']").trigger('click');
+                    //navigate('#signin','slide');
+                    $("#userExist a[href='#signin']").trigger('click');
                 }else{
                     //$.mobile.navigate("#signup");
                     //window.location.hash="signup";
-                    $("a[href='#signup']").trigger('click');
+                    $("#userExist a[href='#signup']").trigger('click');
                 }
             }else{
                 handleExceptionData(data);
             }
         },function(jqXHR, textStatus, errorThrown){
-            handleError();
+            handleError(errorThrown);
         },function(jqXHR, textStatus){
             stopLoad();
         });
@@ -52,7 +52,7 @@ $(function() {
         event.preventDefault();
 
         //show Indicator
-        triggerLoad();
+        triggerLoad("正在登陆中");
 
         var studentId = $("#studentId").val();
         var password = $("#signin-password").val();
@@ -63,12 +63,17 @@ $(function() {
         },function(data,text,xhqr){
             if(data.flag==2){
                 if(window.localStorage){
+                    clearCache();
+
                     window.localStorage.setItem("studentId",studentId);
                     window.localStorage.setItem("privateKey",data.privateKey);
+
+
+
                     window.location.href='app.html';
                     //$("#signin a[href='app.html']").click();
                 }else{
-                    alert("do not support local storage! try to save private key in file");
+                    handleError("do not support local storage! try to save private key in file");
                 }
             }else{
                 handleExceptionData(data);
@@ -90,7 +95,7 @@ $(function() {
         event.preventDefault();
 
         //show Indicator
-        triggerLoad();
+        triggerLoad("正在注册用户");
 
         var studentId = $("#studentId").val();
         var password = $("#signup-password").val();
@@ -103,6 +108,8 @@ $(function() {
             stopLoad();
             if(data.flag==2){
                 if(window.localStorage){
+                    clearCache();
+
                     window.localStorage.setItem("studentId",studentId);
                     window.localStorage.setItem("privateKey",data.privateKey);
                     $(self).trigger('click',true);
@@ -118,15 +125,15 @@ $(function() {
                         }
                     })();
                 }else{
-                    alert("do not support local storage! try to save private key in file");
+                    handleError("do not support local storage! try to save private key in file");
                 }
             }else{
                 handleExceptionData(data);
             }
         },function(jqXHR, textStatus, errorThrown){
-            handleError();
+            handleError(errorThrown);
         },function(jqXHR, textStatus){
-            stopLoad();
+
         });
     });
 
@@ -139,7 +146,7 @@ $(function() {
 
 
     function getUserInfo(itemDoms,index){
-        triggerLoad();
+        triggerLoad("正在为您准备数据");
 
 
         var userInfoItem = itemDoms[index];
@@ -161,13 +168,13 @@ $(function() {
 
                     getCourseInfo(itemDoms,1);
                 }else{
-                    alert("do not support local storage! try to save private key in file");
+                    handleError("do not support local storage! try to save private key in file");
                 }
             }else{
                 handleExceptionData(data);
             }
         },function(jqXHR, textStatus, errorThrown){
-            handleError();
+            handleError(errorThrown);
         });
     }
 
@@ -192,13 +199,13 @@ $(function() {
 
                     getExamInfo(itemDoms, 2);
                 }else{
-                    alert("do not support local storage! try to save private key in file");
+                    handleError("do not support local storage! try to save private key in file");
                 }
             }else{
                 handleExceptionData(data);
             }
         },function(jqXHR, textStatus, errorThrown){
-            handleError();
+            handleError(errorThrown);
         });
     }
 
@@ -213,6 +220,8 @@ $(function() {
             studentId:window.localStorage.getItem("studentId"),
             dynamicPass:window.localStorage.getItem("privateKey")
         },function(data,text,xhqr){
+            stopLoad();
+
             if(data.flag==2){
                 if(window.localStorage){
                     window.localStorage.setItem("examInfo",JSON.stringify(data));
@@ -225,13 +234,13 @@ $(function() {
                     $("#prepareUser a[href='#startUse']").attr("style","");
 
                 }else{
-                    alert("do not support local storage! try to save private key in file");
+                    handleError("do not support local storage! try to save private key in file");
                 }
             }else{
                 handleExceptionData(data);
             }
         },function(jqXHR, textStatus, errorThrown){
-            handleError();
+            handleError(errorThrown);
         });
     }
 });

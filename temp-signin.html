@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html manifest="" lang="en-US">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LifeDjtu--人在交大</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="res/css/bootstrap.css">
+    <link rel="stylesheet" href="res/css/bootstrap-theme.css">
+    <link rel="stylesheet"  href="res/css/jquery.mobile-1.4.1.css">
+    <link rel="stylesheet" href="res/css/app.css">
+    <script src="res/js/jquery.js"></script>
+    <script src="res/js/jquery.mobile-1.4.1.js"></script>
+    <script src="res/js/bootstrap.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+
+    <script src="app/util.js"></script>
+    <script>
+        $(function(){
+            if(window.localStorage.getItem('studentId')){
+                $("#temp-signin #signin-studentId").val(window.localStorage.getItem('studentId'));
+            }
+
+            $("#temp-signin a[href='#nextstep']").click(function(event){
+                var self = this;
+
+                event.preventDefault();
+
+                //show Indicator
+                triggerLoad("正在登陆");
+
+                var studentId = $("#temp-signin #signin-studentId").val();
+                var password = $("#temp-signin #signin-password").val();
+
+                getJSON("webservice/signin.action",{
+                    studentId:studentId,
+                    password:password
+                },function(data,text,xhqr){
+                    if(data.flag==2){
+                        if(window.localStorage){
+                            clearCache();
+
+                            window.localStorage.setItem("studentId",studentId);
+                            window.localStorage.setItem("privateKey",data.privateKey);
+                            window.location.href='app.html';
+                            //$("#signin a[href='app.html']").click();
+                        }else{
+                            alert("do not support local storage! try to save private key in file");
+                        }
+                    }else{
+                        handleExceptionData(data);
+                    }
+                },function(jqXHR, textStatus, errorThrown){
+                    handleError();
+                },function(jqXHR, textStatus){
+                    stopLoad();
+                });
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <div>
+
+    </div>
+    <div data-role="page" id="temp-signin" data-dialog="true">
+        <div role="main" class="ui-content">
+            <br>
+            <h1 class="lead text-center" style="font-size: 50px">Life Djtu</h1>
+            <h4 class="text-info text-muted text-center">人在交大</h4>
+            <br>
+            <div class="form-group">
+                <label for="signin-password" class="text-center lead">对不起，需要重新登录到<span class="text text-info lead span-studentId">人在交大</span></label>
+                <input type="text" class="form-control" id="signin-studentId" name="password" placeholder="输入学号">
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" id="signin-password" name="password" placeholder="输入密码">
+            </div>
+            <a href="#nextstep" data-ajax="false" data-transition="pop" class="ui-btn ui-shadow ui-corner-all ui-btn-b">登陆</a>
+        </div><!-- /content -->
+    </div><!-- /page -->
+</body>
+
+</html>

@@ -8,6 +8,8 @@ $(function() {
 
     initCourseTable();
 
+    testNeedLogin();
+
     ensureRenderExamInfo();
 });
 

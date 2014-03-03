@@ -17,6 +17,12 @@
 
     <script src="app/util.js"></script>
     <script src="app/index.js"></script>
+    <script>
+        //clearCache();
+        if(window.localStorage.getItem('studentId')&&window.localStorage.getItem('privateKey')){
+            window.location.href='app.html';
+        }
+    </script>
 </head>
 
 <body>

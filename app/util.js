@@ -5,9 +5,12 @@
 //global host
 var globalHost = "http://localhost:9119/lifedjtu/";
 
-var triggerLoad = function(){
+var triggerLoad = function(message){
+    if(!message){
+        message = "努力加载中...";
+    }
     $.mobile.loading( "show", {
-        text: "loading...",
+        text: message+"...",
         textVisible: true,
         theme: 'b',
         textonly: false,
@@ -53,59 +56,116 @@ var handleExceptionData = function(data){
         if(data.flag==1){
             handleNeedLogin();
         }else{
-            handleError();
+            handleError("抓取数据时出错了...");
         }
     }else{
-        handleError();
+        handleError("服务器错误...");
     }
 };
 
-var handleError = function(message){
-    if(message){
-        alert(message);
-    }else{
-        alert("出现错误！");
+var handleWarning = function(message){
+    if(!message){
+        message = "小警告，提醒下您哦~";
     }
+
+    var dateId = new Date().getTime();
+    console.log(dateId);
+    $("body").prepend('\
+    <div id="'+dateId+'" style="position: absolute;left:10%;right:10%;top: 5%;z-index: 100000" class="alert alert-warning alert-dismissable">\
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>\
+        <strong>警告</strong> '+message+'\
+    </div>\
+    ');
+
+    $("#"+dateId).fadeOut(3000,function(){
+        $(this).remove();
+    });
+}
+
+var handleError = function(message){
+
+    if(!message){
+        message = "抱歉哦,出现了未知错误！";
+    }
+
+    var dateId = new Date().getTime();
+    console.log(dateId);
+    $("body").prepend('\
+    <div id="'+dateId+'" style="position: absolute;left:10%;right:10%;top: 5%;z-index: 100000" class="alert alert-danger alert-dismissable">\
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>\
+        <strong>错误</strong> '+message+'\
+    </div>\
+    ');
+
+    $("#"+dateId).fadeOut(3000,function(){
+        $(this).remove();
+    });
 };
 
 var handleNeedLogin = function(){
-    alert("出现登录！");
+    //$.mobile.navigate('./');
+    window.location.href='temp-signin.html';
+
 };
 
 var clearCache = function(){
     window.localStorage.clear();
 };
 
+var getDjtuDate = function(){
+    getJSON("webservice/getDjtuDate.action",{
 
-//处理课程表
-var initCourseTable = function(){
-    triggerLoad();
-
-    getJSON("webservice/secure/getDjtuDate.action",{
-        studentId:window.localStorage.getItem("studentId"),
-        dynamicPass:window.localStorage.getItem("privateKey")
     },function(data,text,xhqr){
         if(data.flag==2){
             if(window.localStorage){
                 window.localStorage.setItem("djtuDate",JSON.stringify(data));
-
-                ensureRenderCourseInfo();
             }else{
-                alert("do not support local storage! try to save private key in file");
+                handleError("do not support local storage! try to save private key in file");
             }
         }else{
             handleExceptionData(data);
         }
     },function(jqXHR, textStatus, errorThrown){
-        handleError();
+        handleError(errorThrown);
     });
+}
+
+//处理课程表
+var initCourseTable = function(){
+
+    if(window.localStorage.getItem('djtuDate')){
+        ensureRenderCourseInfo();
+    }else{
+        triggerLoad("需要同步校园当前周数");
+
+        getJSON("webservice/getDjtuDate.action",{
+
+        },function(data,text,xhqr){
+            if(data.flag==2){
+                if(window.localStorage){
+                    window.localStorage.setItem("djtuDate",JSON.stringify(data));
+
+                    ensureRenderCourseInfo();
+                }else{
+                    alert("do not support local storage! try to save private key in file");
+                }
+            }else{
+                handleExceptionData(data);
+            }
+        },function(jqXHR, textStatus, errorThrown){
+            handleError();
+        });
+    }
+
+
 };
 
 //make sure the existence of courseInfo
 var ensureRenderCourseInfo = function(){
-    triggerLoad();
 
     if(!window.localStorage.getItem('courseInfo')){
+        triggerLoad("需要获取学生课程信息");
+
         getJSON("webservice/secure/getCourseInfo.action",{
             studentId:window.localStorage.getItem("studentId"),
             dynamicPass:window.localStorage.getItem("privateKey")
@@ -117,13 +177,13 @@ var ensureRenderCourseInfo = function(){
                     renderCourseTable(data);
 
                 }else{
-                    alert("do not support local storage! try to save private key in file");
+                    handleError("do not support local storage! try to save private key in file");
                 }
             }else{
                 handleExceptionData(data);
             }
         },function(jqXHR, textStatus, errorThrown){
-            handleError();
+            handleError(errorThrown);
         });
     }else{
         //alert('here two');
@@ -136,8 +196,6 @@ var ensureRenderCourseInfo = function(){
 
 //render course table
 var renderCourseTable = function(courseInfo){
-    stopLoad();
-
 
     var djtuDate = JSON.parse(window.localStorage.getItem('djtuDate'));
     var currentWeek = djtuDate.date.week;
@@ -210,15 +268,35 @@ var renderCourseTable = function(courseInfo){
     }else{
         handleError("courseInfo is null!!!");
     }
+
+    stopLoad();
 };
 
-
+var testNeedLogin = function(){
+    getJSON("webservice/secure/getExamInfo.action",{
+        studentId:window.localStorage.getItem("studentId"),
+        dynamicPass:window.localStorage.getItem("privateKey")
+    },function(data,text,xhqr){
+        if(data.flag==2){
+            if(window.localStorage){
+                window.localStorage.setItem("examInfo",JSON.stringify(data));
+            }else{
+                handleError("do not support local storage! try to save private key in file");
+            }
+        }else{
+            handleExceptionData(data);
+        }
+    },function(jqXHR, textStatus, errorThrown){
+        handleError();
+    });
+}
 
 //处理考试
 var ensureRenderExamInfo = function(){
-    triggerLoad();
 
     if(!window.localStorage.getItem('examInfo')){
+        triggerLoad("正在获取考试信息");
+
         getJSON("webservice/secure/getExamInfo.action",{
             studentId:window.localStorage.getItem("studentId"),
             dynamicPass:window.localStorage.getItem("privateKey")
@@ -230,13 +308,13 @@ var ensureRenderExamInfo = function(){
                     renderExamTable(data);
 
                 }else{
-                    alert("do not support local storage! try to save private key in file");
+                    handleError("do not support local storage! try to save private key in file");
                 }
             }else{
                 handleExceptionData(data);
             }
         },function(jqXHR, textStatus, errorThrown){
-            handleError();
+            handleError(errorThrown);
         });
     }else{
         //alert('here two');
@@ -246,7 +324,6 @@ var ensureRenderExamInfo = function(){
 };
 
 var renderExamTable = function(examInfo){
-    stopLoad();
 
     if(examInfo){
 
@@ -259,7 +336,7 @@ var renderExamTable = function(examInfo){
         }else{
             tableDom.append('\
                 <tr>\
-                    <td colspan="6" class="text-center lead">暂时没有考试信息</td>\
+                    <td colspan="6" class="text-center lead text-muted" style="font-size:20px;padding-top: 60px;padding-bottom: 60px"><strong>暂时没有考试信息</strong></td>\
                 </tr>\
             ');
         }
@@ -269,5 +346,8 @@ var renderExamTable = function(examInfo){
     }else{
         handleError("exam info is null!!!");
     }
+
+    stopLoad();
+
 }
 

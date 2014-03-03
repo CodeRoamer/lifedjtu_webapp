@@ -48,13 +48,16 @@
 
     <div data-role="page" id="course-table" data-url="course-table">
         <div style="margin-top: 20px" data-role="header" data-theme="a" data-position="fixed">
-            <h1>Week <span class="lead"><strong>1</strong></span></h1>
+            <h1>
+                第 <span class="lead"><strong>1</strong> 周</span>
+                <a href="javascript:void(0)"  data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-refresh ui-corner-all ui-btn-icon-notext">Open right panel</a>
+            </h1>
             <a href="#leftpanel" data-icon="carat-r" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-grid ui-corner-all ui-btn-icon-notext">Open left panel</a>
             <a href="#rightpanel" data-icon="carat-l" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-bullets ui-corner-all ui-btn-icon-notext">Open right panel</a>
         </div><!-- /header -->
-        <div role="main" class="container-fluid" style="padding-left: 0px;padding-right: 0px">
+        <div id="course-table-style" role="main" class="container-fluid" style="padding-left: 0px;padding-right: 0px;">
             <br>
-            <div class="row">
+            <div class="row" style="margin-bottom: -18px;padding-bottom: 0px">
                 <div class="col-lg-12">
                     <div class="table-responsive">
                         <table class="table table-bordered">
@@ -193,8 +196,19 @@
 
                 </div>
             </div>
+
             <!--<a href="#demo-intro" data-rel="back" class="back-btn ui-btn ui-corner-all ui-shadow ui-mini ui-btn-inline ui-icon-back ui-btn-icon-right">Back to demo intro</a>-->
         </div><!-- /content -->
+
+
+        <div data-role="footer" data-position="fixed">
+            <div data-role="navbar" data-role="footer" data-position="fixed">
+                <ul>
+                    <li><a href="#course-table-style" data-icon="grid" class="ui-btn-active">周课程</a></li>
+                    <li><a href="#course-list-style" data-icon="star">日课程</a></li>
+                </ul>
+            </div><!-- /navbar -->
+        </div><!-- /footer -->
     </div>
 
     <!-- exam page -->
