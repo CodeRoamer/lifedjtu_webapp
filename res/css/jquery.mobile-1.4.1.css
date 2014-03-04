@@ -1530,8 +1530,17 @@ div.ui-mobile-viewport {
 .ui-mini {
 	font-size: 12.5px;
 }
+
+.ui-middle {
+    font-size: 15.5px;
+}
+
 .ui-mini .ui-btn {
 	font-size: inherit;
+}
+
+.ui-middle .ui-btn {
+    font-size: inherit;
 }
 /* Make buttons in toolbars default to mini and inline. */
 .ui-header .ui-btn,

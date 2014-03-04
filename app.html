@@ -17,6 +17,7 @@
 
     <script src="app/util.js"></script>
     <script src="app/app.js"></script>
+    <script src="app/score.js"></script>
 
 </head>
 
@@ -26,15 +27,15 @@
     <div data-position-fixed="true" data-role="panel" id="leftpanel" data-position="left" data-display="reveal" data-theme="a">
         <br>
         <br>
-        <a href="#course-table" data-transition="pop" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-grid">我的课表</a>
-        <a href="#exam-table" data-transition="pop" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-calendar">我的考试</a>
-        <a class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-check">我的成绩</a>
+        <a href="#course-table" data-transition="slide" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-grid">我的课表</a>
+        <a href="#exam-table" data-transition="slide" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-calendar">我的考试</a>
+        <a href="score.html" data-transition="slide" data-ajax="true" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-check">我的成绩</a>
         <br>
         <a class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-user">我的资料</a>
         <a class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-mail">我的消息</a>
         <a class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-gear">设置</a>
         <br>
-        <a class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-power" data-theme="b">退出登陆</a>
+        <a href="index.html" id="exit-button" data-ajax="false" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-power" data-theme="b">退出登陆</a>
     </div><!-- /leftpanel1 -->
 
     <div data-position-fixed="true" data-role="panel" style="width: 130px"  id="rightpanel" data-position="right" data-display="overlay" data-theme="b">
@@ -47,16 +48,21 @@
     </div><!-- /rightpanel3 -->
 
     <div data-role="page" id="course-table" data-url="course-table">
-        <div style="margin-top: 20px" data-role="header" data-theme="a" data-position="fixed">
+        <div data-role="header" data-theme="a" data-position="fixed">
+
             <h1>
-                第 <span class="lead"><strong>1</strong> 周</span>
-                <a href="javascript:void(0)"  data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-refresh ui-corner-all ui-btn-icon-notext">Open right panel</a>
+                <span class="lead">第 <strong>一</strong> 周</span>
             </h1>
-            <a href="#leftpanel" data-icon="carat-r" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-grid ui-corner-all ui-btn-icon-notext">Open left panel</a>
-            <a href="#rightpanel" data-icon="carat-l" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-bullets ui-corner-all ui-btn-icon-notext">Open right panel</a>
+            <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
+                <a href="#leftpanel" data-icon="carat-r" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-bars ui-corner-all ui-btn-icon-notext">Open left panel</a>
+            </div>
+
+            <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
+                <a href="javascript:void(0)"  data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-refresh ui-corner-all ui-btn-icon-notext">Open right panel</a>
+                <a href="#rightpanel" data-icon="carat-l" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-bullets ui-corner-all ui-btn-icon-notext">Open right panel</a>
+            </div>
         </div><!-- /header -->
         <div id="course-table-style" role="main" class="container-fluid" style="padding-left: 0px;padding-right: 0px;">
-            <br>
             <div class="row" style="margin-bottom: -18px;padding-bottom: 0px">
                 <div class="col-lg-12">
                     <div class="table-responsive">
@@ -200,6 +206,475 @@
             <!--<a href="#demo-intro" data-rel="back" class="back-btn ui-btn ui-corner-all ui-shadow ui-mini ui-btn-inline ui-icon-back ui-btn-icon-right">Back to demo intro</a>-->
         </div><!-- /content -->
 
+        <div  id="course-list-style"  style="display:none;margin-top:-5px;padding-left: 0px;padding-right: 0px;" data-role="tabs">
+            <table class="table week-table" style="margin-bottom: -4px">
+                <tr>
+                    <th class="text-center"><a data-order="1">一</a></th>
+                    <th class="text-center"><a data-order="2">二</a></th>
+                    <th class="text-center"><a data-order="3">三</a></th>
+                    <th class="text-center"><a data-order="4">四</a></th>
+                    <th class="text-center"><a data-order="5">五</a></th>
+                    <th class="text-center"><a data-order="6">六</a></th>
+                    <th class="text-center"><a data-order="7">日</a></th>
+                </tr>
+            </table>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <ul id="course-list-1" data-role="listview" data-inset="true" data-split-theme="a" data-split-icon="gear">
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">1</span>&nbsp;&nbsp;
+
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">2</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">3</span>&nbsp;&nbsp;
+
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">4</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">5</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">6</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">7</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">8</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">9</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">10</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">11</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">12</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                        </ul>
+                        <ul id="course-list-2" data-role="listview" data-inset="true" data-split-theme="a" data-split-icon="gear">
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">1</span>&nbsp;&nbsp;
+
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">2</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">3</span>&nbsp;&nbsp;
+
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">4</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">5</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">6</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">7</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">8</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">9</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">10</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">11</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">12</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                        </ul>
+                        <ul id="course-list-3" data-role="listview" data-inset="true" data-split-theme="a" data-split-icon="gear">
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">1</span>&nbsp;&nbsp;
+
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">2</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">3</span>&nbsp;&nbsp;
+
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">4</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">5</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">6</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">7</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">8</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">9</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">10</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li data-theme="a">
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">11</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">12</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                        </ul>
+                        <ul id="course-list-4" data-role="listview" data-inset="true" data-split-theme="a" data-split-icon="gear">
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">1</span>&nbsp;&nbsp;
+
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">2</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">3</span>&nbsp;&nbsp;
+
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">4</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">5</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">6</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">7</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">8</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">9</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">10</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li data-theme="a">
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">11</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">12</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                        </ul>
+                        <ul id="course-list-5" data-role="listview" data-inset="true" data-split-theme="a" data-split-icon="gear">
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">1</span>&nbsp;&nbsp;
+
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">2</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">3</span>&nbsp;&nbsp;
+
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">4</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">5</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">6</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">7</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">8</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">9</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">10</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li data-theme="a">
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">11</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">12</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                        </ul>
+                        <ul id="course-list-6" data-role="listview" data-inset="true" data-split-theme="a" data-split-icon="gear">
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">1</span>&nbsp;&nbsp;
+
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">2</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">3</span>&nbsp;&nbsp;
+
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">4</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">5</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">6</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">7</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">8</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">9</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">10</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">11</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">12</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                        </ul>
+                        <ul id="course-list-7" data-role="listview" data-inset="true" data-split-theme="a" data-split-icon="gear">
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">1</span>&nbsp;&nbsp;
+
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">2</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">3</span>&nbsp;&nbsp;
+
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">4</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">5</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">6</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">7</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">8</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">9</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">10</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">11</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#classDetail">
+                                    <span class="text-warning lead segment" style="font-size: 20px">12</span>&nbsp;&nbsp;
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
 
         <div data-role="footer" data-position="fixed">
             <div data-role="navbar" data-role="footer" data-position="fixed">
@@ -213,28 +688,26 @@
 
     <!-- exam page -->
     <div data-role="page" id="exam-table" data-url="exam-table">
-        <div style="margin-top: 20px" data-role="header" data-theme="a" data-position="fixed">
-            <h1><span class="lead"><strong>我的考试</strong></span></h1>
-            <a href="#leftpanel" data-icon="carat-r" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-grid ui-corner-all ui-btn-icon-notext">Open left panel</a>
-            <a href="#rightpanel" data-icon="carat-l" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-bullets ui-corner-all ui-btn-icon-notext">Open right panel</a>
+        <div data-role="header" data-theme="a" data-position="fixed">
+
+            <h1>
+                <span class="lead">我的考试</span>
+            </h1>
+            <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
+                <a href="#leftpanel" data-icon="carat-r" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-bars ui-corner-all ui-btn-icon-notext">Open left panel</a>
+            </div>
+
+            <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
+                <a href="javascript:void(0)"  data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-refresh ui-corner-all ui-btn-icon-notext">Open right panel</a>
+                <a href="#rightpanel" data-icon="carat-l" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-bullets ui-corner-all ui-btn-icon-notext">Open right panel</a>
+            </div>
         </div><!-- /header -->
         <div role="main" class="container-fluid" style="padding-left: 0px;padding-right: 0px">
-            <br>
+            <div class="table-responsive">
+                <table class="table table-hover">
 
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                            <th></th>
-                            <th>课程号</th>
-                            <th>课程名称</th>
-                            <th>考试时间</th>
-                            <th>考试地点</th>
-                            <th>考试性质</th>
-                            </thead>
-
-                        </table>
-                    </div>
-
+                </table>
+            </div>
             <!--<a href="#demo-intro" data-rel="back" class="back-btn ui-btn ui-corner-all ui-shadow ui-mini ui-btn-inline ui-icon-back ui-btn-icon-right">Back to demo intro</a>-->
         </div><!-- /content -->
     </div>
