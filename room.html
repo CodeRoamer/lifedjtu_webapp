@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <title>LifeDjtu--人在交大</title>
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" href="res/css/bootstrap.css">
@@ -16,41 +16,50 @@
     <script type="text/javascript" src="cordova.js"></script>
 
     <script src="app/util.js"></script>
-    <script src="app/news.js"></script>
+    <script src="app/room.js"></script>
 
 </head>
 
 <body>
     <div></div>
-    <div data-role="page" id="news-list" data-url="news-list">
-        <div data-role="header" data-theme="a" data-position="fixed">
-
+    <div data-role="page" id="room-page" data-url="room-page">
+        <div data-role="header" data-theme="a">
             <h1>
-                <br>
-                <span class="lead">教务资讯</span>
+                <br>探索空教室
             </h1>
             <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
                 <br>
                 <a href="../" data-rel="back"  class="ui-btn ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-carat-l ui-btn-icon-left ui-alt-icon ui-nodisc-icon">返回</a>
             </div>
-
             <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
                 <br>
                 <a href="#refresh-news" data-role="refresh-button"  data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-refresh ui-btn-icon-left ui-alt-icon ui-nodisc-icon">刷新</a>
             </div>
-        </div><!-- /header -->
+        </div>
 
-        <div class="ui-content" data-role="main">
-            <ul data-role="listview" data-inset="true">
-            </ul>
+        <div role="main" class="ui-content">
+            <fieldset class="ui-grid-a">
+                <div class="ui-block-a">
+                    <select id="area-menu" data-native-menu="true" name="arae" class="ui-mini">
+
+                    </select>
+                </div>
+                <div class="ui-block-b">
+                    <select id="building-menu" data-native-menu="true" name="building" class="ui-mini">
+
+                    </select>
+                </div>
+            </fieldset>
+            <a href="#query-room"  class="ui-shadow ui-btn ui-icon-search ui-btn-icon-left ui-corner-all ui-mini">查询</a>
         </div>
     </div>
 
-    <div data-role="page"  id="news-detail" data-url="news-detail">
+
+    <div data-role="page"  id="room-list" data-url="room-list">
         <div data-role="header" data-theme="a" data-position="fixed">
             <h5>
                 <br>
-                <span class="lead news-title" ></span>
+                <span class="lead building-title"></span>
             </h5>
             <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
                 <br>
@@ -67,6 +76,9 @@
 
         </div><!-- /footer -->
     </div>
+
+
+
 
 </body>
 </html>

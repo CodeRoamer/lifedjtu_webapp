@@ -1496,6 +1496,22 @@ table th[class*="col-"] {
 .table > tfoot > tr.active > th {
   background-color: #f5f5f5;
 }
+
+.table > thead > tr > td.inverse,
+.table > tbody > tr > td.inverse,
+.table > tfoot > tr > td.inverse,
+.table > thead > tr > th.inverse,
+.table > tbody > tr > th.inverse,
+.table > tfoot > tr > th.inverse,
+.table > thead > tr.inverse > td,
+.table > tbody > tr.inverse > td,
+.table > tfoot > tr.inverse > td,
+.table > thead > tr.inverse > th,
+.table > tbody > tr.inverse > th,
+.table > tfoot > tr.inverse > th {
+    background-color: darkgray;
+}
+
 .table-hover > tbody > tr > td.active:hover,
 .table-hover > tbody > tr > th.active:hover,
 .table-hover > tbody > tr.active:hover > td,

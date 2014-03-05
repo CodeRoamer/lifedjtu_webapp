@@ -2,9 +2,14 @@
  * Created by apple on 3/1/14.
  */
 
+
+
+//处理全局时间
+
+
 //global host
-//var globalHost = "http://localhost:9119/lifedjtu/";
-var globalHost = "http://lifedjtu.duapp.com/";
+var globalHost = "http://localhost:9119/lifedjtu/";
+//var globalHost = "http://lifedjtu.duapp.com/";
 
 
 var triggerLoad = function(message){
@@ -71,9 +76,9 @@ var handleWarning = function(message){
     }
 
     var dateId = new Date().getTime();
-    console.log(dateId);
+    //console.log(dateId);
     $("body").prepend('\
-    <div id="'+dateId+'" style="position: absolute;left:10%;right:10%;top: 5%;z-index: 100000" class="alert alert-warning alert-dismissable">\
+    <div id="'+dateId+'" style="position: fixed;left:10%;right:10%;top: 5%;z-index: 100000" class="alert alert-warning alert-dismissable">\
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>\
         <strong>警告</strong> '+message+'\
     </div>\
@@ -90,9 +95,9 @@ var handleSuccess = function(message){
     }
 
     var dateId = new Date().getTime();
-    console.log(dateId);
+    //console.log(dateId);
     $("body").prepend('\
-    <div id="'+dateId+'" style="position: absolute;left:10%;right:10%;top: 5%;z-index: 100000" class="alert alert-success alert-dismissable">\
+    <div id="'+dateId+'" style="position: fixed;left:10%;right:10%;top: 5%;z-index: 100000" class="alert alert-success alert-dismissable">\
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>\
         <strong>信息</strong> '+message+'\
     </div>\
@@ -112,9 +117,9 @@ var handleError = function(message){
     }
 
     var dateId = new Date().getTime();
-    console.log(dateId);
+    //console.log(dateId);
     $("body").prepend('\
-    <div id="'+dateId+'" style="position: absolute;left:10%;right:10%;top: 5%;z-index: 100000" class="alert alert-danger alert-dismissable">\
+    <div id="'+dateId+'" style="position: fixed;left:10%;right:10%;top: 5%;z-index: 100000" class="alert alert-danger alert-dismissable">\
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>\
         <strong>错误</strong> '+message+'\
     </div>\
@@ -225,7 +230,11 @@ var renderCourseTable = function(courseInfo){
     var djtuDate = JSON.parse(window.localStorage.getItem('djtuDate'));
     var currentWeek = djtuDate.date.week;
 
+
+
     if(courseInfo){
+        var theme = ["success","info","danger","warning"];
+        var themeIndex = 0;
 
         $.each(courseInfo.courseDtos, function(index, course){
             //console.log(course);
@@ -269,7 +278,7 @@ var renderCourseTable = function(courseInfo){
                         if(!enabledClass){
                             tdDom.attr('class', 'active');
                         }else{
-                            tdDom.attr("class",["success","info","warning","danger"][parseInt(Math.random()*4)]);
+                            tdDom.attr("class",theme[themeIndex++%4]);
                         }
                         tdDom.attr("rowspan",segmentNum);
                         for(var i = 1; i < segmentNum; i++){
@@ -394,9 +403,8 @@ var testNeedLogin = function(){
 
 
 //处理考试
-var ensureRenderExamInfo = function(){
-
-    if(!window.localStorage.getItem('examInfo')){
+var ensureRenderExamInfo = function(updateFlag){
+    if(updateFlag){
         triggerLoad("正在获取考试信息");
 
         getJSON("webservice/secure/getExamInfo.action",{
@@ -419,10 +427,13 @@ var ensureRenderExamInfo = function(){
             handleError(errorThrown);
         });
     }else{
-        //alert('here two');
-
-        renderExamTable(JSON.parse(window.localStorage.getItem('examInfo')));
+        if(window.localStorage.getItem('examInfo')){
+            renderExamTable(JSON.parse(window.localStorage.getItem('examInfo')));
+        }else{
+            handleWarning("没有缓存数据，尝试刷新页面！")
+        }
     }
+
 };
 
 var renderExamTable = function(examInfo){
@@ -588,18 +599,19 @@ var renderScoreTable = function(scoreInfo){
 };
 
 
-var ensureRenderNews = function(updateFlag,pageNum){
+var ensureRenderNews = function(updateFlag,pageNum,callback){
     if(updateFlag){
-        if(window.localStorage.getItem("djtuNotes_page")==-1&&pageNum>0){
-            handleWarning("新闻已过时，请刷新");
-            return;
-        }
+//        if(window.localStorage.getItem("djtuNotes_page")==-1&&pageNum>0){
+//            handleWarning("新闻已过时，请刷新");
+//            return;
+//        }
 
         triggerLoad("正在获取资讯");
 
-        pageNum = pageNum||0;
-        if(pageNum==0){
-            //clearNewsList();
+        pageNum = pageNum||1;
+        if(pageNum<=1){
+            pageNum=1;
+            clearNewsList();
         }
 
         getJSON("webservice/getDjtuNotes.action",{
@@ -607,8 +619,11 @@ var ensureRenderNews = function(updateFlag,pageNum){
         },function(data,text,xhqr){
             if(data.flag==2){
                 if(window.localStorage){
+                    if(callback)
+                        callback();
+
                     window.localStorage.setItem("djtuNotes",JSON.stringify(data));
-                    window.localStorage.setItem("djtuNotes_page",JSON.stringify(pageNum));
+                    window.localStorage.setItem("djtuNotes_page",pageNum);
 
                     renderNewsList(data);
 
@@ -638,11 +653,12 @@ var renderNewsList = function(djtuNotes){
         var listDom = $("#news-list ul");
 
         $.each(djtuNotes.notes, function(index, note){
+
             listDom.append('\
             <li>\
-                <a href="#news-detail?href='+note.href+'" class="ui-btn ui-btn-icon-right ui-icon-carat-r">\
+                <a href="#news-detail" data-transition="slide" data-href="'+note.href+'" class="ui-btn ui-btn-icon-right ui-icon-carat-r">\
                     '+(note.important?'<span class="glyphicon glyphicon-fire text-danger"></span>':'')+'\
-                    <span class="lead '+(note.important?'text-danger':'')+'">'+note.title+'</span><br>\
+                    <span class="lead title '+(note.important?'text-danger':'')+'">'+note.title+'</span><br>\
                     <span class="lead text-muted">'+note.releaseDate+'</span>\
                 </a>\
             </li>\
@@ -651,7 +667,7 @@ var renderNewsList = function(djtuNotes){
 
         listDom.append('\
             <li>\
-                <a href="#more-news?pageNum='+(parseInt(window.localStorage.getItem('djtuNotes_page'))+1)+'" class="ui-btn ui-btn-icon-right ui-icon-carat-d">\
+                <a href="#more-news" data-pageNum="'+(parseInt(window.localStorage.getItem('djtuNotes_page'))+1)+'" class="ui-btn ui-btn-icon-right ui-icon-carat-d">\
                     <span class="text-center">更多新闻</span>\
                 </a>\
             </li>\
@@ -665,4 +681,166 @@ var renderNewsList = function(djtuNotes){
 
 var clearNewsList = function(){
     $("#news-list ul").empty();
+}
+
+
+var ensureRenderNewsContent = function(noteHref){
+    triggerLoad("正在获取资讯");
+
+    getJSON("webservice/getDjtuNote.action",{
+        noteHref:noteHref
+    },function(data,text,xhqr){
+        if(data.flag==2){
+
+            if(window.localStorage){
+
+                renderNewsContent(data.note);
+
+            }else{
+                handleError("do not support local storage! try to save private key in file");
+            }
+        }else{
+            handleExceptionData(data);
+        }
+    },function(jqXHR, textStatus, errorThrown){
+        handleError(errorThrown);
+    });
+};
+
+var renderNewsContent = function(newsContent){
+    if(newsContent){
+        $("#news-detail #note-content").html(newsContent);
+    }else{
+        handleError("note content is null");
+    }
+
+    stopLoad();
+}
+
+
+var ensureRenderAreaMenu = function(updateFlag){
+    if(updateFlag){
+        triggerLoad("正在获取校区列表");
+
+        getJSON("webservice/getAreas.action",{
+        },function(data,text,xhqr){
+            if(data.flag==2){
+                if(window.localStorage){
+                    window.localStorage.setItem('areas', JSON.stringify(data));
+                    renderAreaMenu(data);
+
+                }else{
+                    handleError("do not support local storage! try to save private key in file");
+                }
+            }else{
+                handleExceptionData(data);
+            }
+        },function(jqXHR, textStatus, errorThrown){
+            handleError(errorThrown);
+        });
+    }else{
+        if(!window.localStorage.getItem('areas')){
+            triggerLoad("正在获取校区列表");
+
+            getJSON("webservice/getAreas.action",{
+            },function(data,text,xhqr){
+                if(data.flag==2){
+                    if(window.localStorage){
+                        window.localStorage.setItem('areas', JSON.stringify(data));
+                        renderAreaMenu(data);
+
+                    }else{
+                        handleError("do not support local storage! try to save private key in file");
+                    }
+                }else{
+                    handleExceptionData(data);
+                }
+            },function(jqXHR, textStatus, errorThrown){
+                handleError(errorThrown);
+            });
+        }else{
+            renderAreaMenu(JSON.parse(window.localStorage.getItem('areas')));
+        }
+    }
+};
+
+var renderAreaMenu = function(areaInfo){
+    if(areaInfo){
+        var roomMenuDom = $("#room-page #area-menu");
+        roomMenuDom.empty();
+        $.each(areaInfo.areaList, function(index, area){
+            roomMenuDom.append('\
+                <option value="'+area.id+'" '+(index==0?'selected="selected"':'')+'>'+area.areaName+'</option>\
+            ');
+        });
+    }else{
+        handleError("area info is null");
+    }
+
+    stopLoad();
+}
+
+
+var ensureRenderBuildingMenu = function(updateFlag, areaId){
+    if(updateFlag){
+        triggerLoad("正在获取校区楼列表");
+
+        getJSON("webservice/getBuildings.action",{
+            areaId:areaId
+        },function(data,text,xhqr){
+            if(data.flag==2){
+                if(window.localStorage){
+                    window.localStorage.setItem('buildings_'+areaId, JSON.stringify(data));
+                    renderBuildingMenu(data);
+
+                }else{
+                    handleError("do not support local storage! try to save private key in file");
+                }
+            }else{
+                handleExceptionData(data);
+            }
+        },function(jqXHR, textStatus, errorThrown){
+            handleError(errorThrown);
+        });
+    }else{
+        if(!window.localStorage.getItem('buildings_'+areaId)){
+            triggerLoad("正在获取校区楼列表");
+
+            getJSON("webservice/getBuildings.action",{
+                areaId:areaId
+            },function(data,text,xhqr){
+                if(data.flag==2){
+                    if(window.localStorage){
+                        window.localStorage.setItem('buildings_'+areaId, JSON.stringify(data));
+                        renderBuildingMenu(data);
+
+                    }else{
+                        handleError("do not support local storage! try to save private key in file");
+                    }
+                }else{
+                    handleExceptionData(data);
+                }
+            },function(jqXHR, textStatus, errorThrown){
+                handleError(errorThrown);
+            });
+        }else{
+            renderBuildingMenu(JSON.parse(window.localStorage.getItem('buildings_'+areaId)));
+        }
+    }
+};
+
+var renderBuildingMenu = function(buildingInfo){
+    if(buildingInfo){
+        var buildingMenuDom = $("#room-page #building-menu");
+        buildingMenuDom.empty();
+        //console.log(buildingInfo);
+        $.each(buildingInfo.biuldingList, function(index, building){
+            buildingMenuDom.append('\
+                <option value="'+building.id+'">'+building.buildingName+'</option>\
+            ');
+        });
+    }else{
+        handleError("building info is null");
+    }
+    stopLoad();
 }

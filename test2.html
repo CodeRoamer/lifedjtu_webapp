@@ -1,0 +1,80 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+        body, html,#allmap {width: 100%;height: 100%;overflow: hidden;margin:0;}
+    </style>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=DmHHwIyhvBlgLkZKaQmCLN51"></script>
+    <title>baidu map</title>
+</head>
+<body>
+<div id="allmap"></div>
+</body>
+</html>
+<script type="text/javascript">
+    //图书馆经纬度 121.170391,38.800567
+    //教学楼经纬度 121.170031,38.801608
+    //艺术楼经纬度 121.169025,38.801235
+
+    //默认二期中心  121.170274,38.800237
+
+    var sContent =
+            "<h4 style='margin:0 0 5px 0;padding:0.2em 0'>天安门</h4>" +
+                    "<img style='float:right;margin:4px' id='imgDemo' src='http://app.baidu.com/map/images/tiananmen.jpg' width='139' height='104' title='天安门'/>" +
+                    "<p style='margin:0;line-height:1.5;font-size:13px;text-indent:2em'>天安门坐落在中国北京市中心,故宫的南侧,与天安门广场隔长安街相望,是清朝皇城的大门...</p>" +
+                    "</div>";
+    var infoWindow = new BMap.InfoWindow(sContent);  // 创建信息窗口对象
+
+
+    // 百度地图API功能 初始化地图
+    var map = new BMap.Map("allmap");            // 创建Map实例
+    var point = new BMap.Point(121.170274,38.800237);
+    map.centerAndZoom(point, 18);
+    map.addControl(new BMap.NavigationControl());               // 添加平移缩放控件
+    map.addControl(new BMap.ScaleControl());                    // 添加比例尺控件
+    //map.addControl(new BMap.OverviewMapControl());              //添加缩略地图控件
+    map.enableScrollWheelZoom();                            //启用滚轮放大缩小
+    //map.addControl(new BMap.MapTypeControl());          //添加地图类型控件
+
+
+    //开始查找用户地点
+//    var geolocation = new BMap.Geolocation();
+//    geolocation.getCurrentPosition(function(r){
+//        if(this.getStatus() == BMAP_STATUS_SUCCESS){
+//            //创建自己
+//            var myIcon = new BMap.Icon("./res/icon/person.gif", new BMap.Size(100,100));
+//            var markerSelf = new BMap.Marker(r.point,{icon:myIcon});  // 创建标注
+//            map.addOverlay(markerSelf);              // 将标注添加到地图中
+//
+//            map.panTo(r.point);
+//        }
+//        else {
+//            alert('获取用户位置失败! 错误代码:'+this.getStatus());
+//        }
+//    },{enableHighAccuracy: true})
+
+    // 编写自定义函数,创建标注
+    function addMarker(point){
+        var marker = new BMap.Marker(point);
+        map.addOverlay(marker);
+        marker.addEventListener("click", function(){
+            this.openInfoWindow(infoWindow);
+            //图片加载完毕重绘infowindow
+            document.getElementById('imgDemo').onload = function (){
+                infoWindow.redraw();   //防止在网速较慢，图片未加载时，生成的信息框高度比图片的总高度小，导致图片部分被隐藏
+            }
+        });
+        marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+    }
+
+    var buildingPoints = [];
+    buildingPoints.push(new BMap.Point(121.170391,38.800567));
+    buildingPoints.push(new BMap.Point(121.170031,38.801608));
+    buildingPoints.push(new BMap.Point(121.169025,38.801235));
+
+    for(var i = 0; i < buildingPoints.length; ++i){
+        addMarker(buildingPoints[i]);
+    }
+
+</script>
