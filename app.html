@@ -18,7 +18,7 @@
     <script src="app/util.js"></script>
     <script src="app/app.js"></script>
     <script src="app/score.js"></script>
-
+    <script src="app/news.js"></script>
 </head>
 
 <body>
@@ -27,9 +27,9 @@
     <div data-position-fixed="true" data-role="panel" id="leftpanel" data-position="left" data-display="reveal" data-theme="a">
         <br>
         <br>
-        <a href="#course-table" data-transition="slide" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-grid">我的课表</a>
-        <a href="#exam-table" data-transition="slide" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-calendar">我的考试</a>
-        <a href="score.html" data-transition="slide" data-ajax="true" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-check">我的成绩</a>
+        <a href="#course-table" data-transition="pop" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-grid">我的课表</a>
+        <a href="#exam-table" data-transition="pop" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-calendar">我的考试</a>
+        <a href="#score-table"  data-transition="pop" data-ajax="true" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-check">我的成绩</a>
         <br>
         <a class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-user">我的资料</a>
         <a class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-mail">我的消息</a>
@@ -40,7 +40,7 @@
 
     <div data-position-fixed="true" data-role="panel" style="width: 130px"  id="rightpanel" data-position="right" data-display="overlay" data-theme="b">
         <a href="#" data-rel="close" class="ui-btn ui-btn-inline ui-icon-delete ui-btn-icon-left">关闭</a>
-        <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-bars ui-btn-icon-bottom">看资讯</a>
+        <a href="news.html" data-prefetch="true"  data-transition="slideup" class="ui-btn ui-shadow ui-corner-all ui-icon-bars ui-btn-icon-bottom">看资讯</a>
         <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-search ui-btn-icon-bottom">查教室</a>
         <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-star ui-btn-icon-bottom">算均分</a>
         <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-comment ui-btn-icon-bottom">全评估</a>
@@ -51,13 +51,16 @@
         <div data-role="header" data-theme="a" data-position="fixed">
 
             <h1>
+                <br>
                 <span class="lead">第 <strong>一</strong> 周</span>
             </h1>
             <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
+                <br>
                 <a href="#leftpanel" data-icon="carat-r" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-bars ui-corner-all ui-btn-icon-notext">Open left panel</a>
             </div>
 
             <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
+                <br>
                 <a href="javascript:void(0)"  data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-refresh ui-corner-all ui-btn-icon-notext">Open right panel</a>
                 <a href="#rightpanel" data-icon="carat-l" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-bullets ui-corner-all ui-btn-icon-notext">Open right panel</a>
             </div>
@@ -691,13 +694,16 @@
         <div data-role="header" data-theme="a" data-position="fixed">
 
             <h1>
+                <br>
                 <span class="lead">我的考试</span>
             </h1>
             <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
+                <br>
                 <a href="#leftpanel" data-icon="carat-r" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-bars ui-corner-all ui-btn-icon-notext">Open left panel</a>
             </div>
 
             <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
+                <br>
                 <a href="javascript:void(0)"  data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-refresh ui-corner-all ui-btn-icon-notext">Open right panel</a>
                 <a href="#rightpanel" data-icon="carat-l" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-bullets ui-corner-all ui-btn-icon-notext">Open right panel</a>
             </div>
@@ -711,6 +717,69 @@
             <!--<a href="#demo-intro" data-rel="back" class="back-btn ui-btn ui-corner-all ui-shadow ui-mini ui-btn-inline ui-icon-back ui-btn-icon-right">Back to demo intro</a>-->
         </div><!-- /content -->
     </div>
+
+    <!-- score page -->
+    <div data-role="page" id="score-table" data-url="score-table">
+        <div data-role="header" data-theme="a" data-position="fixed">
+
+            <h1>
+                <br>
+                <span class="lead">我的成绩</span>
+            </h1>
+            <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
+                <br>
+                <a href="#leftpanel" data-icon="carat-r" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-bars ui-corner-all ui-btn-icon-notext">Open left panel</a>
+            </div>
+
+            <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
+                <br>
+                <a href="javascript:void(0)"  data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-refresh ui-corner-all ui-btn-icon-notext">Open right panel</a>
+                <a href="#rightpanel" data-icon="carat-l" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-bullets ui-corner-all ui-btn-icon-notext">Open right panel</a>
+            </div>
+        </div><!-- /header -->
+        <div role="main" class="container-fluid">
+            <form>
+                <div class="ui-grid-a">
+                    <div class="ui-block-a">
+                        <select id="schoolYear-menu" data-native-menu="false" name="schoolYear" class="ui-mini">
+                            <option value="2020">2020</option>
+                            <option value="2019">2019</option>
+                            <option value="2018">2018</option>
+                            <option value="2017">2017</option>
+                            <option value="2016">2016</option>
+                            <option value="2015">2015</option>
+                            <option value="2014" selected="selected">2014</option>
+                            <option value="2013">2013</option>
+                            <option value="2012">2012</option>
+                            <option value="2011">2011</option>
+                            <option value="2010">2010</option>
+                            <option value="2009">2009</option>
+                            <option value="2008">2008</option>
+                            <option value="2007">2007</option>
+                            <option value="2006">2006</option>
+                            <option value="2005">2005</option>
+                        </select>
+                    </div>
+                    <div class="ui-block-b">
+                        <select id="term-menu" data-native-menu="false" name="term" class="ui-mini">
+                            <option value="1">春</option>
+                            <option value="2">秋</option>
+                        </select>
+                    </div>
+                </div>
+                <a href="#search-score"  class="ui-shadow ui-btn ui-icon-search ui-btn-icon-left ui-corner-all ui-mini">查询</a>
+
+            </form>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-condensed">
+
+                </table>
+            </div>
+            <!--<a href="#demo-intro" data-rel="back" class="back-btn ui-btn ui-corner-all ui-shadow ui-mini ui-btn-inline ui-icon-back ui-btn-icon-right">Back to demo intro</a>-->
+        </div><!-- /content -->
+        <script src="app/score.js"></script>
+    </div>
+
 </body>
 
 </html>

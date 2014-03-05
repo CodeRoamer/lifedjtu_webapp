@@ -3,7 +3,9 @@
  */
 
 //global host
-var globalHost = "http://localhost:9119/lifedjtu/";
+//var globalHost = "http://localhost:9119/lifedjtu/";
+var globalHost = "http://lifedjtu.duapp.com/";
+
 
 var triggerLoad = function(message){
     if(!message){
@@ -90,7 +92,7 @@ var handleSuccess = function(message){
     var dateId = new Date().getTime();
     console.log(dateId);
     $("body").prepend('\
-    <div id="'+dateId+'" style="position: absolute;left:10%;right:10%;top: 5%;z-index: 100000" class="alert alert-warning alert-dismissable">\
+    <div id="'+dateId+'" style="position: absolute;left:10%;right:10%;top: 5%;z-index: 100000" class="alert alert-success alert-dismissable">\
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>\
         <strong>信息</strong> '+message+'\
     </div>\
@@ -102,6 +104,8 @@ var handleSuccess = function(message){
 }
 
 var handleError = function(message){
+
+    stopLoad();
 
     if(!message){
         message = "抱歉哦,出现了未知错误！";
@@ -488,36 +492,8 @@ var ensureRenderScoreInfo = function(updateFlag, schoolYear, term){
             handleError(errorThrown);
         });
     }else{
-        if(!window.localStorage.getItem('scoreInfo')){
-            triggerLoad("正在获取考试成绩");
-
-            getJSON("webservice/secure/getScoreInfo.action",{
-                studentId:window.localStorage.getItem("studentId"),
-                dynamicPass:window.localStorage.getItem("privateKey"),
-                schoolYear:schoolYear||0,
-                term:term||0
-            },function(data,text,xhqr){
-                if(data.flag==2){
-                    if(window.localStorage){
-                        window.localStorage.setItem("scoreInfo",JSON.stringify(data));
-                        window.localStorage.setItem("scoreInfo_year",JSON.stringify(schoolYear||0));
-                        window.localStorage.setItem("scoreInfo_term",JSON.stringify(term||0));
-
-                        renderScoreTable(data);
-
-                    }else{
-                        handleError("do not support local storage! try to save private key in file");
-                    }
-                }else{
-                    handleExceptionData(data);
-                }
-            },function(jqXHR, textStatus, errorThrown){
-                handleError(errorThrown);
-            });
-        }else{
-            //alert('here two');
-
-            renderScoreTable(JSON.parse(window.localStorage.getItem('examInfo')));
+        if(window.localStorage.getItem('scoreInfo')){
+            renderScoreTable(JSON.parse(window.localStorage.getItem('scoreInfo')));
         }
     }
 
@@ -525,6 +501,7 @@ var ensureRenderScoreInfo = function(updateFlag, schoolYear, term){
 };
 
 var renderScoreTable = function(scoreInfo){
+    triggerLoad("分析数据");
     if(scoreInfo){
 
         var tableDom = $("#score-table table[class*='table']");
@@ -538,12 +515,12 @@ var renderScoreTable = function(scoreInfo){
             <th>课程号</th>\
             <th>课序号</th>\
             <th>课程名</th>\
-            <th>选课属性</th>\
-            <th>课组</th>\
-            <th>学分</th>\
             <th>平时</th>\
             <th>期末</th>\
             <th>总评</th>\
+            <th>选课属性</th>\
+            <th>课组</th>\
+            <th>学分</th>\
             <th>是否缓考</th>\
             <th>考试性质</th>\
             <th>备注</th>\
@@ -575,13 +552,13 @@ var renderScoreTable = function(scoreInfo){
                     <td>'+score.term+'</td>\
                     <td>'+score.courseAliasName+'</td>\
                     <td>'+score.courseSequence+'</td>\
-                    <td>'+score.courseName+'</td>\
-                    <td>'+score.courseAttr+'</td>\
-                    <td>'+score.courseGroup+'</td>\
-                    <td>'+score.courseMarks+'</td>\
+                    <td>'+(score.courseName.length>10?score.courseName.substr(0,10)+'...':score.courseName)+'</td>\
                     <td>'+score.normalScore+'</td>\
                     <td>'+score.finalScore+'</td>\
                     <td>'+score.totalScore+'</td>\
+                    <td>'+score.courseAttr+'</td>\
+                    <td>'+score.courseGroup+'</td>\
+                    <td>'+score.courseMarks+'</td>\
                     <td>'+score.isPostponed+'</td>\
                     <td>'+score.courseProperty+'</td>\
                     <td>'+score.memo+'</td>\
@@ -601,7 +578,7 @@ var renderScoreTable = function(scoreInfo){
 
 
         //console.log(examInfo);
-        handleSuccess("成绩获取了考试成绩！");
+        //handleSuccess("成绩获取了考试成绩！");
     }else{
         handleError("score info is null!!!");
     }
@@ -609,3 +586,83 @@ var renderScoreTable = function(scoreInfo){
     stopLoad();
 
 };
+
+
+var ensureRenderNews = function(updateFlag,pageNum){
+    if(updateFlag){
+        if(window.localStorage.getItem("djtuNotes_page")==-1&&pageNum>0){
+            handleWarning("新闻已过时，请刷新");
+            return;
+        }
+
+        triggerLoad("正在获取资讯");
+
+        pageNum = pageNum||0;
+        if(pageNum==0){
+            //clearNewsList();
+        }
+
+        getJSON("webservice/getDjtuNotes.action",{
+            pageNum:pageNum
+        },function(data,text,xhqr){
+            if(data.flag==2){
+                if(window.localStorage){
+                    window.localStorage.setItem("djtuNotes",JSON.stringify(data));
+                    window.localStorage.setItem("djtuNotes_page",JSON.stringify(pageNum));
+
+                    renderNewsList(data);
+
+                }else{
+                    handleError("do not support local storage! try to save private key in file");
+                }
+            }else{
+                handleExceptionData(data);
+            }
+        },function(jqXHR, textStatus, errorThrown){
+            handleError(errorThrown);
+        });
+    }else{
+        if(window.localStorage.getItem("djtuNotes")){
+            window.localStorage.setItem("djtuNotes_page",-1);
+            renderNewsList(JSON.parse(window.localStorage.getItem("djtuNotes")));
+        }
+    }
+
+
+};
+
+var renderNewsList = function(djtuNotes){
+    triggerLoad("分析数据")
+
+    if(djtuNotes){
+        var listDom = $("#news-list ul");
+
+        $.each(djtuNotes.notes, function(index, note){
+            listDom.append('\
+            <li>\
+                <a href="#news-detail?href='+note.href+'" class="ui-btn ui-btn-icon-right ui-icon-carat-r">\
+                    '+(note.important?'<span class="glyphicon glyphicon-fire text-danger"></span>':'')+'\
+                    <span class="lead '+(note.important?'text-danger':'')+'">'+note.title+'</span><br>\
+                    <span class="lead text-muted">'+note.releaseDate+'</span>\
+                </a>\
+            </li>\
+            ');
+        });
+
+        listDom.append('\
+            <li>\
+                <a href="#more-news?pageNum='+(parseInt(window.localStorage.getItem('djtuNotes_page'))+1)+'" class="ui-btn ui-btn-icon-right ui-icon-carat-d">\
+                    <span class="text-center">更多新闻</span>\
+                </a>\
+            </li>\
+            ');
+    }else{
+        handleError("courseInfo is null!!!");
+    }
+
+    stopLoad();
+};
+
+var clearNewsList = function(){
+    $("#news-list ul").empty();
+}
