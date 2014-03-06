@@ -30,7 +30,7 @@ $(function(){
             $("#room-list .story-list").empty();
 
             $("#room-list .slider-container").empty();
-            $("#room-list .slider-container").append($("#room-page #unique-slider").clone());
+            $("#room-list .slider-container").append($("#room-page .slider-container").children('div'));
 
 
             $("#room-list input[name='segment-start']").attr('value',startIndex);
@@ -63,4 +63,16 @@ $(function(){
             divDom.attr("aria-hidden",'true')
         }
     });
+
+    $("#room-list a[data-rel='back']").click(function(event){
+        $("#room-page .slider-container").append($("#room-list .slider-container").children('div'));
+    });
+
+    $("#room-list a[data-role='refresh-button']").click(function(event){
+        var startIndex = $("#room-list input[data-type='range']:eq(0)").val();
+        var endIndex = $("#room-list input[data-type='range']:eq(1)").val();
+
+        renderRoomTakenList(JSON.parse(window.localStorage.getItem('roomTakenItems_temp')),null,startIndex, endIndex);
+    });
+
 });

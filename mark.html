@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html manifest="" lang="en-US">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LifeDjtu--人在交大</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="res/css/bootstrap.css">
+    <link rel="stylesheet" href="res/css/bootstrap-theme.css">
+    <link rel="stylesheet"  href="res/css/jquery.mobile-1.4.1.css">
+    <link rel="stylesheet" href="res/css/app.css">
+    <script src="res/js/jquery.js"></script>
+    <script src="res/js/jquery.mobile-1.4.1.js"></script>
+    <script src="res/js/bootstrap.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+
+    <script src="app/util.js"></script>
+    <script src="app/mark.js"></script>
+
+</head>
+
+<body>
+<div></div>
+<div data-role="page" id="mark-page" data-url="mark-page">
+    <div data-role="header" data-theme="a" data-position="fixed">
+        <h1>
+            <br>
+            <span class="lead">平均学分绩计算</span>
+        </h1>
+        <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
+            <br>
+            <a href="../" data-rel="back"  class="ui-btn ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-carat-l ui-btn-icon-left ui-alt-icon ui-nodisc-icon">返回</a>
+        </div>
+
+
+    </div><!-- /header -->
+
+    <div role="main" class="container-fluid">
+        <form>
+            <div class="ui-grid-a">
+                <div class="ui-block-a">
+                    <select id="schoolYear-menu" data-native-menu="true" name="schoolYear" class="ui-mini">
+                        <option value="2020">2020</option>
+                        <option value="2019">2019</option>
+                        <option value="2018">2018</option>
+                        <option value="2017">2017</option>
+                        <option value="2016">2016</option>
+                        <option value="2015">2015</option>
+                        <option value="2014" selected="selected">2014</option>
+                        <option value="2013">2013</option>
+                        <option value="2012">2012</option>
+                        <option value="2011">2011</option>
+                        <option value="2010">2010</option>
+                        <option value="2009">2009</option>
+                        <option value="2008">2008</option>
+                        <option value="2007">2007</option>
+                        <option value="2006">2006</option>
+                        <option value="2005">2005</option>
+                    </select>
+                </div>
+                <div class="ui-block-b">
+                    <select id="term-menu" data-native-menu="true" name="term" class="ui-mini">
+                        <option value="1">春</option>
+                        <option value="2">秋</option>
+                    </select>
+                </div>
+            </div>
+            <a href="#compute-mark"  class="ui-shadow ui-btn ui-icon-search ui-btn-icon-left ui-corner-all ui-mini">查询</a>
+        </form>
+        <br>
+        <br>
+        <table class="table table-bordered table-striped">
+            <tbody>
+            <td class="text-info">年份</td>
+            <td id="schoolYear-td" class="text-success"></td>
+            <td class="text-info">学期</td>
+            <td id="term-td" class="text-success"></td>
+            </tbody>
+            <tbody>
+            <td colspan="2" class="danger">平均学分绩</td>
+            <td id="mark-td" colspan="2" class="warning"></td>
+            </tbody>
+        </table>
+        <!--<a href="#demo-intro" data-rel="back" class="back-btn ui-btn ui-corner-all ui-shadow ui-mini ui-btn-inline ui-icon-back ui-btn-icon-right">Back to demo intro</a>-->
+    </div><!-- /content -->
+
+
+</div>
+
+
+
+</body>
+</html>

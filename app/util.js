@@ -897,17 +897,21 @@ var ensureRenderRoomTakenList = function(updateFlag, buildingId,buildingName,sta
                 handleError(errorThrown);
             });
         }else{
-            renderRoomTakenList(JSON.parse(window.localStorage.getItem('roomTakenItems_temp')),'',startSegment, endSegment);
+            console.log("I think here will be executed!");
+            renderRoomTakenList(JSON.parse(window.localStorage.getItem('roomTakenItems_temp')),null,startSegment, endSegment);
         }
     }
 };
 
 
 var renderRoomTakenList = function(roomTakenInfo,buildingName, startSegment, endSegment){
-    if(roomTakenInfo&&buildingName){
+    if(roomTakenInfo){
 
+        triggerLoad("正在分析数据");
         //room-list page的title
-        $("#room-list .building-title").text(buildingName);
+        if(buildingName&&buildingName!=''){
+            $("#room-list .building-title").text(buildingName);
+        }
 
         var storyMap;
 
@@ -947,7 +951,7 @@ var renderRoomTakenList = function(roomTakenInfo,buildingName, startSegment, end
                 var roomTaken = roomTakenItem.todayTakenCondition;
 
                 //有必要判断segment合法吗
-                if(strAllZero(roomTaken.substring(startSegment-1,endSegment-1))){
+                if(strAllZero(roomTaken.substring(startSegment-1,endSegment))){
                     var roomItemStr = '\
                 <li data-inset="false" data-iconpos="right" data-role="collapsible" class="room-item ui-collapsible ui-collapsible-themed-content ui-collapsible-collapsed ui-li-static ui-body-inherit">\
                     <h2 class="ui-collapsible-heading ui-collapsible-heading-collapsed">\
@@ -958,26 +962,6 @@ var renderRoomTakenList = function(roomTakenInfo,buildingName, startSegment, end
                     </h2>\
                     <div class="ui-collapsible-content ui-body-inherit ui-collapsible-content-collapsed" aria-hidden="true">\
                     <table class="table">\
-                        <tbody>\
-                            <td colspan="5">教室类型</td>\
-                            <td colspan="5">'+roomTakenItem.room.roomType+'</td>\
-                        </tbody>\
-                        <tbody>\
-                            <td colspan="5">座位类型</td>\
-                            <td colspan="5">'+roomTakenItem.room.roomSeatType+'</td>\
-                        </tbody>\
-                        <tbody>\
-                            <td colspan="5">座位数目</td>\
-                            <td colspan="5">'+roomTakenItem.room.roomSeatNum+'</td>\
-                        </tbody>\
-                        <tbody>\
-                            <td colspan="5">考试容量</td>\
-                            <td colspan="5">'+roomTakenItem.room.examCapacity+'</td>\
-                        </tbody>\
-                        <tbody>\
-                            <td colspan="5">课程容量</td>\
-                            <td colspan="5">'+roomTakenItem.room.courseCapacity+'</td>\
-                        </tbody>\
                         <tbody>\
                             <td>1</td>\
                             <td>2</td>\
@@ -1002,6 +986,26 @@ var renderRoomTakenList = function(roomTakenInfo,buildingName, startSegment, end
                             <td><span class="'+(roomTaken[8]=='0'?'text-success':'text-danger')+'">*</span></td>\
                             <td><span class="'+(roomTaken[9]=='0'?'text-success':'text-danger')+'">*</span></td>\
                         </tbody>\
+                        <tbody>\
+                            <td colspan="5">教室类型</td>\
+                            <td colspan="5">'+roomTakenItem.room.roomType+'</td>\
+                        </tbody>\
+                        <tbody>\
+                            <td colspan="5">座位类型</td>\
+                            <td colspan="5">'+roomTakenItem.room.roomSeatType+'</td>\
+                        </tbody>\
+                        <tbody>\
+                            <td colspan="5">座位数目</td>\
+                            <td colspan="5">'+roomTakenItem.room.roomSeatNum+'</td>\
+                        </tbody>\
+                        <tbody>\
+                            <td colspan="5">考试容量</td>\
+                            <td colspan="5">'+roomTakenItem.room.examCapacity+'</td>\
+                        </tbody>\
+                        <tbody>\
+                            <td colspan="5">课程容量</td>\
+                            <td colspan="5">'+roomTakenItem.room.courseCapacity+'</td>\
+                        </tbody>\
                     </table>\
                     </div>\
                 </li>\
@@ -1022,6 +1026,7 @@ var renderRoomTakenList = function(roomTakenInfo,buildingName, startSegment, end
 
         }
 
+        handleSuccess("数据已分析完毕");
     }else{
         handleError("room taken info is null");
     }
