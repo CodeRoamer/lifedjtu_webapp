@@ -897,7 +897,7 @@ var ensureRenderRoomTakenList = function(updateFlag, buildingId,buildingName,sta
                 handleError(errorThrown);
             });
         }else{
-            console.log("I think here will be executed!");
+            //console.log("I think here will be executed!");
             renderRoomTakenList(JSON.parse(window.localStorage.getItem('roomTakenItems_temp')),null,startSegment, endSegment);
         }
     }
