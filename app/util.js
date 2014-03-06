@@ -8,8 +8,8 @@
 
 
 //global host
-var globalHost = "http://localhost:9119/lifedjtu/";
-//var globalHost = "http://lifedjtu.duapp.com/";
+//var globalHost = "http://localhost:9119/lifedjtu/";
+var globalHost = "http://lifedjtu.duapp.com/";
 
 
 var triggerLoad = function(message){
@@ -768,11 +768,16 @@ var renderAreaMenu = function(areaInfo){
     if(areaInfo){
         var roomMenuDom = $("#room-page #area-menu");
         roomMenuDom.empty();
+        roomMenuDom.append('\
+            <option value="-1">选个校区</option>\
+        ');
         $.each(areaInfo.areaList, function(index, area){
             roomMenuDom.append('\
-                <option value="'+area.id+'" '+(index==0?'selected="selected"':'')+'>'+area.areaName+'</option>\
+                <option value="'+area.id+'">'+area.areaName+'</option>\
             ');
         });
+
+        $("#area-menu-button").children('span').text($("#room-page #area-menu").children('option:first').text());
     }else{
         handleError("area info is null");
     }
@@ -839,8 +844,286 @@ var renderBuildingMenu = function(buildingInfo){
                 <option value="'+building.id+'">'+building.buildingName+'</option>\
             ');
         });
+        $("#building-menu-button").children('span').text($("#room-page #building-menu").children('option:first').text());
+
     }else{
         handleError("building info is null");
     }
     stopLoad();
 }
+
+var ensureRenderRoomTakenList = function(updateFlag, buildingId,buildingName,startSegment, endSegment){
+    if(updateFlag){
+        triggerLoad("正在获取教室占用信息");
+
+        getJSON("webservice/getRoomTakenItems.action",{
+            buildingId:buildingId
+        },function(data,text,xhqr){
+            if(data.flag==2){
+                if(window.localStorage){
+                    window.localStorage.setItem('roomTakenItems_temp', JSON.stringify(data));
+                    window.localStorage.removeItem('roomTakenItems_map');
+                    renderRoomTakenList(data,buildingName,startSegment, endSegment);
+
+                }else{
+                    handleError("do not support local storage! try to save private key in file");
+                }
+            }else{
+                handleExceptionData(data);
+            }
+        },function(jqXHR, textStatus, errorThrown){
+            handleError(errorThrown);
+        });
+    }else{
+        if(!window.localStorage.getItem('roomTakenItems_'+buildingId)){
+            triggerLoad("正在获取教室占用信息");
+
+            getJSON("webservice/getRoomTakenItems.action",{
+                buildingId:buildingId
+            },function(data,text,xhqr){
+                if(data.flag==2){
+                    if(window.localStorage){
+                        window.localStorage.setItem('roomTakenItems_temp', JSON.stringify(data));
+                        window.localStorage.removeItem('roomTakenItems_map');
+                        renderRoomTakenList(data,buildingName,startSegment, endSegment);
+
+                    }else{
+                        handleError("do not support local storage! try to save private key in file");
+                    }
+                }else{
+                    handleExceptionData(data);
+                }
+            },function(jqXHR, textStatus, errorThrown){
+                handleError(errorThrown);
+            });
+        }else{
+            renderRoomTakenList(JSON.parse(window.localStorage.getItem('roomTakenItems_temp')),'',startSegment, endSegment);
+        }
+    }
+};
+
+
+var renderRoomTakenList = function(roomTakenInfo,buildingName, startSegment, endSegment){
+    if(roomTakenInfo&&buildingName){
+
+        //room-list page的title
+        $("#room-list .building-title").text(buildingName);
+
+        var storyMap;
+
+        //或者从storage中取出map或者重新获取，因为map会在roomTakenItem重新抓取时被重置为空
+        if(!window.localStorage.getItem('roomTakenItems_map')){
+            storyMap = createStoryMap(roomTakenInfo);
+        }else{
+            storyMap = JSON.parse(window.localStorage.getItem('roomTakenItems_map'));
+        }
+
+        //找到story list
+        var storyListDom = $("#room-list .story-list");
+        //清空内容
+        storyListDom.empty();
+        //遍历storyMap render the list
+        for(var story in storyMap){
+            var storyItemStr = '<li data-inset="false" data-iconpos="right" data-role="collapsible" class="story-item ui-collapsible ui-collapsible-themed-content ui-collapsible-collapsed ui-li-static ui-body-inherit">\
+            <h2 class="ui-collapsible-heading ui-collapsible-heading-collapsed">\
+                <a class="toggle-button ui-collapsible-heading-toggle ui-btn ui-icon-plus ui-btn-icon-right ui-btn-inherit" href="#">\
+                    '+story+'\
+                    <span class="ui-collapsible-heading-status"> click to collapse contents</span>\
+                </a>\
+            </h2>\
+            </li>';
+            var storyItemDom = $(storyItemStr);
+
+            var divPlusStr = '<div class="ui-collapsible-content ui-body-inherit ui-collapsible-content-collapsed" aria-hidden="true"></div>';
+            var divPlusDom = $(divPlusStr);
+            var roomListStr = '<ul data-role="listview" data-theme="b" class="room-list ui-listview ui-group-theme-b"></ul>';
+            var roomListDom = $(roomListStr);
+
+            var roomCount = 0;
+
+            $.each(storyMap[story], function(index, roomTakenItem){
+
+                //逻辑判断room taken item是否符合用户的查询要求
+                var roomTaken = roomTakenItem.todayTakenCondition;
+
+                //有必要判断segment合法吗
+                if(strAllZero(roomTaken.substring(startSegment-1,endSegment-1))){
+                    var roomItemStr = '\
+                <li data-inset="false" data-iconpos="right" data-role="collapsible" class="room-item ui-collapsible ui-collapsible-themed-content ui-collapsible-collapsed ui-li-static ui-body-inherit">\
+                    <h2 class="ui-collapsible-heading ui-collapsible-heading-collapsed">\
+                        <a class="toggle-button ui-collapsible-heading-toggle ui-btn ui-icon-plus ui-btn-icon-right ui-btn-inherit" href="#">\
+                            '+roomTakenItem.roomName+'\
+                            <span class="ui-collapsible-heading-status"> click to expand contents</span>\
+                        </a>\
+                    </h2>\
+                    <div class="ui-collapsible-content ui-body-inherit ui-collapsible-content-collapsed" aria-hidden="true">\
+                    <table class="table">\
+                        <tbody>\
+                            <td colspan="5">教室类型</td>\
+                            <td colspan="5">'+roomTakenItem.room.roomType+'</td>\
+                        </tbody>\
+                        <tbody>\
+                            <td colspan="5">座位类型</td>\
+                            <td colspan="5">'+roomTakenItem.room.roomSeatType+'</td>\
+                        </tbody>\
+                        <tbody>\
+                            <td colspan="5">座位数目</td>\
+                            <td colspan="5">'+roomTakenItem.room.roomSeatNum+'</td>\
+                        </tbody>\
+                        <tbody>\
+                            <td colspan="5">考试容量</td>\
+                            <td colspan="5">'+roomTakenItem.room.examCapacity+'</td>\
+                        </tbody>\
+                        <tbody>\
+                            <td colspan="5">课程容量</td>\
+                            <td colspan="5">'+roomTakenItem.room.courseCapacity+'</td>\
+                        </tbody>\
+                        <tbody>\
+                            <td>1</td>\
+                            <td>2</td>\
+                            <td>3</td>\
+                            <td>4</td>\
+                            <td>5</td>\
+                            <td>6</td>\
+                            <td>7</td>\
+                            <td>8</td>\
+                            <td>9</td>\
+                            <td>10</td>\
+                        </tbody>\
+                        <tbody>\
+                            <td><span class="'+(roomTaken[0]=='0'?'text-success':'text-danger')+'">*</span></td>\
+                            <td><span class="'+(roomTaken[1]=='0'?'text-success':'text-danger')+'">*</span></td>\
+                            <td><span class="'+(roomTaken[2]=='0'?'text-success':'text-danger')+'">*</span></td>\
+                            <td><span class="'+(roomTaken[3]=='0'?'text-success':'text-danger')+'">*</span></td>\
+                            <td><span class="'+(roomTaken[4]=='0'?'text-success':'text-danger')+'">*</span></td>\
+                            <td><span class="'+(roomTaken[5]=='0'?'text-success':'text-danger')+'">*</span></td>\
+                            <td><span class="'+(roomTaken[6]=='0'?'text-success':'text-danger')+'">*</span></td>\
+                            <td><span class="'+(roomTaken[7]=='0'?'text-success':'text-danger')+'">*</span></td>\
+                            <td><span class="'+(roomTaken[8]=='0'?'text-success':'text-danger')+'">*</span></td>\
+                            <td><span class="'+(roomTaken[9]=='0'?'text-success':'text-danger')+'">*</span></td>\
+                        </tbody>\
+                    </table>\
+                    </div>\
+                </li>\
+                ';
+                    roomListDom.append(roomItemStr);
+
+                    ++roomCount;
+                }
+
+
+            });
+
+            if(roomCount!=0){
+                divPlusDom.append(roomListDom);
+                storyItemDom.append(divPlusDom);
+                storyListDom.append(storyItemDom);
+            }
+
+        }
+
+    }else{
+        handleError("room taken info is null");
+    }
+    stopLoad();
+};
+
+var createStoryMap = function(roomTakenInfo){
+    if(roomTakenInfo){
+
+        var commonPart = roomTakenInfo.roomTakenItemList[0].roomName;
+
+        for(var i = 1; i < roomTakenInfo.roomTakenItemList.length; ++i){
+            //get roomName
+            var roomName = roomTakenInfo.roomTakenItemList[i].roomName;
+            //console.log("roomName: "+roomName);
+            //console.log("commonPart: "+commonPart);
+
+            if(!startWithLetterOrDigit(roomName)){
+                //console.log("roomName:"+roomName+" is not a valid start!");
+                continue;
+            }
+
+            if(!startWithLetterOrDigit(commonPart)){
+                //console.log("roomName:"+roomName+" is not a valid start!");
+                commonPart = roomName;
+            }
+
+
+            if(commonPart==roomName){
+                //console.log("common part is equal to roomName!!!");
+                continue;
+            }else{
+                var foundFlag = false;
+                for(var j = commonPart.length; j > 0; j--){
+                    if(prefixFullfill(roomName,commonPart.substring(0, j))){
+                        commonPart = commonPart.substring(0, j)
+                        //console.log("find a good sub! : "+commonPart);
+                        foundFlag = true;
+                        break;
+                    }
+                }
+                if(!foundFlag){
+                    commonPart = '';
+                    //console.log('no common part event within 1 character!');
+                    break;
+                }
+            }
+        }
+
+        //console.log("Common Part is:"+commonPart);
+
+
+        //更新教室页面title
+        var storyMap = {};
+
+
+        $.each(roomTakenInfo.roomTakenItemList, function(index, roomTakenItem){
+            //console.log(roomTakenItem.roomName);
+
+            var roomName = roomTakenItem.roomName;
+            var roomTaken = roomTakenItem.todayTakenCondition;
+            var roomTakenTom = roomTakenItem.tomorrowTakenCondition;
+
+            var roomDetail = roomTakenItem.room;
+
+            if(prefixFullfill(roomName,commonPart)){
+                (storyMap[roomName.substr(0,commonPart.length+1)]=storyMap[roomName.substr(0,commonPart.length+1)]||[]).push(roomTakenItem);
+            }else{
+                (storyMap['未知分组']=storyMap['未知分组']||[]).push(roomTakenItem);
+            }
+        });
+
+        window.localStorage.setItem('roomTakenItems_map', JSON.stringify(storyMap));
+
+        return storyMap;
+
+    }else{
+        return undefined;
+    }
+};
+
+var startWithLetterOrDigit = function(str){
+    var reg = /^[a-zA-Z0-9\-]+/;
+
+    return reg.test(str);
+};
+
+var strAllZero = function(str){
+    for(var i = 0; i < str.length; ++i){
+        if(str[i]=='1'){
+            return false;
+        }
+    }
+
+    return true;
+};
+
+var prefixFullfill = function(str, prefix){
+    for(var i = 0; i < prefix.length; ++i){
+        if(str[i]!=prefix[i]){
+            return false;
+        }
+    }
+    return true;
+};

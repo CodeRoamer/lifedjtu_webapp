@@ -9,6 +9,21 @@
     <link rel="stylesheet" href="res/css/bootstrap.css">
     <link rel="stylesheet" href="res/css/bootstrap-theme.css">
     <link rel="stylesheet"  href="res/css/jquery.mobile-1.4.1.css">
+    <style>
+        .ui-li-static.ui-collapsible > .ui-collapsible-heading {
+            margin: 0;
+        }
+        .ui-li-static.ui-collapsible {
+            padding: 0;
+        }
+        .ui-li-static.ui-collapsible > .ui-collapsible-heading > .ui-btn {
+            border-top-width: 0;
+        }
+        .ui-li-static.ui-collapsible > .ui-collapsible-heading.ui-collapsible-heading-collapsed > .ui-btn,
+        .ui-li-static.ui-collapsible > .ui-collapsible-content {
+            border-bottom-width: 0;
+        }
+    </style>
     <link rel="stylesheet" href="res/css/app.css">
     <script src="res/js/jquery.js"></script>
     <script src="res/js/jquery.mobile-1.4.1.js"></script>
@@ -38,19 +53,30 @@
         </div>
 
         <div role="main" class="ui-content">
-            <fieldset class="ui-grid-a">
-                <div class="ui-block-a">
-                    <select id="area-menu" data-native-menu="true" name="arae" class="ui-mini">
+            <div class="ui-field-contain">
+                <fieldset class="ui-grid-a">
+                    <div class="ui-block-a">
+                        <select id="area-menu" data-native-menu="true" name="area" class="ui-mini">
 
-                    </select>
-                </div>
-                <div class="ui-block-b">
-                    <select id="building-menu" data-native-menu="true" name="building" class="ui-mini">
+                        </select>
+                    </div>
+                    <div class="ui-block-b">
+                        <select id="building-menu" data-native-menu="true" name="building" class="ui-mini">
 
-                    </select>
+                        </select>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="ui-field-contain slider-container">
+                <div id="unique-slider" data-role="rangeslider">
+                    <input name="segment-start"  min="1" max="10" value="1" type="range">
+                    <label for="range-1">滑出你需求的节数区间</label>
+                    <input name="segment-end" id="range-1" min="1" max="10" value="10" type="range">
                 </div>
-            </fieldset>
-            <a href="#query-room"  class="ui-shadow ui-btn ui-icon-search ui-btn-icon-left ui-corner-all ui-mini">查询</a>
+            </div>
+            <a href="#room-list" style="display: none" data-transition="slide" class="ui-shadow ui-btn ui-icon-search ui-btn-icon-left ui-corner-all ui-mini">查询</a>
+            <a href="#" id="query-room-list" data-transition="slide" class="ui-shadow ui-btn ui-icon-search ui-btn-icon-left ui-corner-all ui-mini">查询</a>
         </div>
     </div>
 
@@ -59,7 +85,7 @@
         <div data-role="header" data-theme="a" data-position="fixed">
             <h5>
                 <br>
-                <span class="lead building-title"></span>
+                <span class="lead building-title">正在分析数据...</span>
             </h5>
             <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
                 <br>
@@ -67,13 +93,22 @@
             </div>
         </div><!-- /header -->
 
-        <div class="ui-content" data-role="main">
-            <div class="container-fluid" id="note-content">
+        <div class="ui-content" data-role="main" id="note-content">
+            <ul class="story-list" data-role="listview" data-theme="a">
 
-            </div>
+            </ul>
+
+
         </div>
         <div data-role="footer" data-position="fixed">
-
+            <div class="container-fluid">
+                <div class="ui-field-contain slider-container">
+                    <div data-role="rangeslider">
+                        <input name="segment-start"  min="1" max="10" value="1" type="range">
+                        <input name="segment-end"  min="1" max="10" value="10" type="range">
+                    </div>
+                </div>
+            </div>
         </div><!-- /footer -->
     </div>
 
