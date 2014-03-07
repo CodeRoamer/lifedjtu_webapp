@@ -88,17 +88,19 @@ $(function() {
     //启动时间扫描
     setInterval(updateDjtuDate(),60000);
 
-    updateDjtuDate();
-    initCourseTable();
+
+    initCourseTable(updateDjtuDate);
 
     //left panel function
     $("#leftpanel a[href='#course-table']").click(function(){
-
+        $("#leftpanel #leftpanel-close-btn").click();
     });
     $("#leftpanel a[href='#exam-table']").click(function(){
+        $("#leftpanel #leftpanel-close-btn").click();
         ensureRenderExamInfo(false);
     });
     $("#leftpanel a[href='#score-table']").click(function(){
+        $("#leftpanel #leftpanel-close-btn").click();
         ensureRenderScoreInfo(false);
     });
 
@@ -118,6 +120,7 @@ $(function() {
 
     });
     //course list
+    //从周课程切换到日课程
     $("a[href='#course-list-style']").click(function(event){
         event.preventDefault();
 
@@ -138,12 +141,14 @@ $(function() {
 
     });
 
+    //在日课程中切换周几的课程
     $("table[class*='week-table'] a").click(function(event){
         event.preventDefault();
 
         showWeekDayList($(this).attr('data-order'));
     });
 
+    //主界面的退出button，清空缓存数据
     $("#exit-button").click(function(event){
         window.localStorage.clear();
     });
@@ -163,11 +168,42 @@ $(function() {
 
     }
 
+    //考试页面的刷新按钮
     $("#exam-table a[data-role='refresh']").click(function(event){
         event.preventDefault();
 
         ensureRenderExamInfo(true);
     });
+
+    //点开list中的某个课程，查看课程实例信息
+    $(document).on("click", "#course-list-style a[href='#classDetail']", function(event){
+        //alert("hello,you click!");
+
+        //console.log($(this).html());
+
+        event.preventDefault();
+        //课程名
+        var className = $(this).children(".class-name").text();
+        //老师的名称
+        var teacherName = $(this).contents().find(".teacher-name").text();
+        //课程remoteId
+        var remoteId = $(this).children('.remote-id').text();
+        if(!className||!teacherName||className==''||teacherName==''){
+            handleWarning("此处没有可以显示的课程！");
+            return;
+        }
+
+        $("#classDetail .course-name").text(className);
+        $("#classDetail .teacher-name").text(teacherName);
+        $("#classDetail h5[class*='all-class']").text('');
+
+        $("#global-classDetail-entry-button").trigger('click');
+
+        //开始执行远程数据查询
+        ensureRenderCourseInstance(false,remoteId);
+    });
+
+
 
 });
 

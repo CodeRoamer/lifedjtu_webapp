@@ -66,7 +66,7 @@ var handleExceptionData = function(data){
             handleError("抓取数据时出错了...");
         }
     }else{
-        handleError("服务器错误...");
+        handleError("哎呦，出错了，请检查是否输入有错？");
     }
 };
 
@@ -159,7 +159,7 @@ var getDjtuDate = function(){
 }
 
 //处理课程表
-var initCourseTable = function(){
+var initCourseTable = function(callback){
 
     if(window.localStorage.getItem('djtuDate')){
         ensureRenderCourseInfo();
@@ -172,7 +172,7 @@ var initCourseTable = function(){
             if(data.flag==2){
                 if(window.localStorage){
                     window.localStorage.setItem("djtuDate",JSON.stringify(data));
-
+                    callback();
                     ensureRenderCourseInfo();
                 }else{
                     alert("do not support local storage! try to save private key in file");
@@ -360,7 +360,7 @@ var renderCourseList = function(courseInfo){
 
                         aDom.children('.segment').text(segment+'-'+(parseInt(segment)+segmentNum-1));
                         aDom.append('\
-                        <span class="text-info class-name" style="font-size: 20px">'+course.courseName+'</span><br>&nbsp;&nbsp;\
+                        <span class="text-info class-name" style="font-size: 20px">'+course.courseName+'</span><br>&nbsp;&nbsp;<span style="display: none" class="remote-id">'+course.courseRemoteId+'</span>\
                             <span class="lead"><span class="glyphicon glyphicon-user"></span>老师: <span class="teacher-name">'+course.teacherName+'</span></span><br>&nbsp;&nbsp;\
                             <span class="lead"><span class="glyphicon glyphicon-map-marker"></span>地点: <span class="room-name">'+roomName+'</span></span><br>&nbsp;&nbsp;\
                                 <span class="lead"><span class="glyphicon glyphicon-calendar"></span>周数: <span class="week-span">'+weekStr.substr(1)+'</span>周</span>\
@@ -430,7 +430,7 @@ var ensureRenderExamInfo = function(updateFlag){
         if(window.localStorage.getItem('examInfo')){
             renderExamTable(JSON.parse(window.localStorage.getItem('examInfo')));
         }else{
-            handleWarning("没有缓存数据，尝试刷新页面！")
+            //handleWarning("没有缓存数据，尝试刷新页面！")
         }
     }
 
@@ -444,12 +444,14 @@ var renderExamTable = function(examInfo){
         tableDom.empty();
         tableDom.append('\
         <thead>\
+            <tr>\
             <th></th>\
             <th>课程号</th>\
             <th>课程名称</th>\
             <th>考试时间</th>\
             <th>考试地点</th>\
             <th>考试性质</th>\
+            </tr>\
         </thead>\
         ');
         if(examInfo&&examInfo.examDtoslength>0){
@@ -538,7 +540,7 @@ var renderScoreTable = function(scoreInfo){
             <th>主讲教师</th>\
             <th>课程类别</th>\
             </tr>\
-        </tr>\
+        </thead>\
         ');
         if(scoreInfo&&scoreInfo.scoreDtos.length>0){
             $.each(scoreInfo.scoreDtos, function(index, score){
@@ -639,6 +641,7 @@ var ensureRenderNews = function(updateFlag,pageNum,callback){
     }else{
         if(window.localStorage.getItem("djtuNotes")){
             window.localStorage.setItem("djtuNotes_page",-1);
+            clearNewsList();
             renderNewsList(JSON.parse(window.localStorage.getItem("djtuNotes")));
         }
     }
@@ -1131,4 +1134,83 @@ var prefixFullfill = function(str, prefix){
         }
     }
     return true;
+};
+
+
+//单个课程实例的抓取
+var ensureRenderCourseInstance = function(updateFlag, remoteId){
+    if(updateFlag){
+        triggerLoad("正在获取课程信息");
+
+        getJSON("webservice/secure/getCourseInstance.action",{
+            remoteId:remoteId,
+            studentId:window.localStorage.getItem("studentId"),
+            dynamicPass:window.localStorage.getItem("privateKey")
+        },function(data,text,xhqr){
+            if(data.flag==2){
+                if(window.localStorage){
+                    window.localStorage.setItem('courseInstance_'+remoteId, JSON.stringify(data));
+                    renderCourseInstance(data);
+
+                }else{
+                    handleError("do not support local storage! try to save private key in file");
+                }
+            }else{
+                handleExceptionData(data);
+            }
+        },function(jqXHR, textStatus, errorThrown){
+            handleError(errorThrown);
+        });
+    }else{
+        if(!window.localStorage.getItem('courseInstance_'+remoteId)){
+            triggerLoad("正在获取课程信息");
+
+            getJSON("webservice/secure/getCourseInstance.action",{
+                remoteId:remoteId,
+                studentId:window.localStorage.getItem("studentId"),
+                dynamicPass:window.localStorage.getItem("privateKey")
+            },function(data,text,xhqr){
+                if(data.flag==2){
+                    if(window.localStorage){
+                        window.localStorage.setItem('courseInstance_'+remoteId, JSON.stringify(data));
+                        renderCourseInstance(data);
+
+                    }else{
+                        handleError("do not support local storage! try to save private key in file");
+                    }
+                }else{
+                    handleExceptionData(data);
+                }
+            },function(jqXHR, textStatus, errorThrown){
+                handleError(errorThrown);
+            });
+        }else{
+            renderCourseInstance(JSON.parse(window.localStorage.getItem('courseInstance_'+remoteId)));
+        }
+    }
+};
+
+var renderCourseInstance = function(courseInstanceInfo){
+
+    if(courseInstanceInfo){
+        triggerLoad("正在分析数据");
+
+        console.log(courseInstanceInfo['classes'].join('|'));
+
+
+        //有哪些班合并上此课？
+        $("#classDetail h5[class*='all-class']").text(courseInstanceInfo['classes'].join('|'));
+
+        $("#classDetail .goodEval").text(courseInstanceInfo.goodEval);
+        $("#classDetail .badEval").text(courseInstanceInfo.badEval);
+
+        $("#classDetail #sameClassHeader").children(".ui-li-count").text(courseInstanceInfo.sameClassMembers.length);
+        $("#classDetail #sameGradeHeader").children(".ui-li-count").text(courseInstanceInfo.sameGradeMembers.length);
+        $("#classDetail #sameCourseHeader").children(".ui-li-count").text(courseInstanceInfo.sameCourseMembers.length);
+
+        console.log(courseInstanceInfo);
+    }
+
+
+    stopLoad();
 };
