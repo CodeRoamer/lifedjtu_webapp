@@ -117,7 +117,7 @@ $(function() {
                     //处理以下的几步必须过程
 
                     (function(){
-                        console.log('in inner package');
+                        //console.log('in inner package');
                         var itemDoms = $("#prepareUser .list-group-item");
 
                         if(itemDoms.length==3){

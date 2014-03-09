@@ -31,9 +31,9 @@
         <a href="#exam-table" data-transition="pop" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-calendar">我的考试</a>
         <a href="#score-table"  data-transition="pop" data-ajax="true" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-check">我的成绩</a>
         <br>
-        <a class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-user">我的资料</a>
-        <a class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-mail">我的消息</a>
-        <a class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-gear">设置</a>
+        <a href="user.html" data-ajax="false" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-user">我的资料</a>
+        <a data-ajax="false" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-mail">我的消息</a>
+        <a data-transition="pop" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-gear">设置</a>
         <br>
         <a href="index.html" id="exit-button" data-ajax="false" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-power" data-theme="b">退出登陆</a>
     </div><!-- /leftpanel1 -->
@@ -57,13 +57,13 @@
             </h1>
             <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
                 <br>
-                <a href="#leftpanel" data-icon="carat-r" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-bars ui-corner-all ui-btn-icon-notext">Open left panel</a>
+                <a href="#leftpanel"  data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-bars ui-btn-icon-left ui-alt-icon ui-nodisc-icon">菜单</a>
             </div>
 
             <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
                 <br>
                 <a href="javascript:void(0)"  data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-refresh ui-corner-all ui-btn-icon-notext">Open right panel</a>
-                <a href="#rightpanel" data-icon="carat-l" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-bullets ui-corner-all ui-btn-icon-notext">Open right panel</a>
+                <a href="#rightpanel"  data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-bullets ui-btn-icon-left ui-alt-icon ui-nodisc-icon">工具箱</a>
             </div>
         </div><!-- /header -->
         <div id="course-table-style" role="main" class="container-fluid" style="padding-left: 0px;padding-right: 0px;">
@@ -683,8 +683,8 @@
         <div data-role="footer" data-position="fixed">
             <div data-role="navbar" data-role="footer" data-position="fixed">
                 <ul>
-                    <li><a href="#course-table-style" data-icon="grid" class="ui-btn-active">周课程</a></li>
-                    <li><a href="#course-list-style" data-icon="star">日课程</a></li>
+                    <li><a href="#course-table-style" data-icon="grid" class="ui-btn-active ui-state-persist">周课程</a></li>
+                    <li><a href="#course-list-style" data-icon="star" class="">日课程</a></li>
                 </ul>
             </div><!-- /navbar -->
         </div><!-- /footer -->
@@ -700,14 +700,15 @@
             </h1>
             <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
                 <br>
-                <a href="#leftpanel" data-icon="carat-r" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-bars ui-corner-all ui-btn-icon-notext">Open left panel</a>
+                <a href="#leftpanel"  data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-bars ui-btn-icon-left ui-alt-icon ui-nodisc-icon">菜单</a>
             </div>
 
             <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
                 <br>
                 <a href="javascript:void(0)" data-role="refresh" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-refresh ui-corner-all ui-btn-icon-notext">Open right panel</a>
-                <a href="#rightpanel" data-icon="carat-l" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-bullets ui-corner-all ui-btn-icon-notext">Open right panel</a>
+                <a href="#rightpanel"  data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-bullets ui-btn-icon-left ui-alt-icon ui-nodisc-icon">工具箱</a>
             </div>
+
         </div><!-- /header -->
         <div role="main" class="container-fluid" style="padding-left: 0px;padding-right: 0px">
             <div class="table-responsive">
@@ -724,7 +725,7 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td colspan="6" class="text-center text-muted lead">成绩会在这里显示.</td>
+                            <td colspan="6" class="text-center text-muted lead">考试安排会在这里显示.</td>
                         </tr>
                     </tbody>
                 </table>
@@ -743,12 +744,12 @@
             </h1>
             <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
                 <br>
-                <a href="#leftpanel" data-icon="carat-r" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-bars ui-corner-all ui-btn-icon-notext">Open left panel</a>
+                <a href="#leftpanel"  data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-bars ui-btn-icon-left ui-alt-icon ui-nodisc-icon">菜单</a>
             </div>
 
             <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
                 <br>
-                <a href="#rightpanel" data-icon="carat-l" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-icon-bullets ui-corner-all ui-btn-icon-notext">Open right panel</a>
+                <a href="#rightpanel"  data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-bullets ui-btn-icon-left ui-alt-icon ui-nodisc-icon">工具箱</a>
             </div>
         </div><!-- /header -->
         <div role="main" class="container-fluid">
@@ -821,7 +822,7 @@
         <div data-role="header" data-theme="a" data-position="fixed">
             <h1>
                 <br>
-                <span class="lead course-name">美国文学作品选读</span>
+                <span class="lead course-name">正在获取信息中...</span>
             </h1>
             <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
                 <br>
@@ -829,7 +830,7 @@
             </div>
             <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
                 <br>
-                <a href="#refresh-news" data-role="refresh-button"  data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-refresh ui-btn-icon-left ui-alt-icon ui-nodisc-icon">刷新</a>
+                <a href="#refresh-course-info" data-role="refresh-button"  data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-refresh ui-btn-icon-left ui-alt-icon ui-nodisc-icon">刷新</a>
             </div>
 
         </div><!-- /header -->
@@ -838,57 +839,40 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="">
-                        <h2 class="text-primary text-center course-name">美国文学作品选读</h2>
-                        <h5 class="text-muted text-center teacher-name">季婷婷</h5>
-                        <h5 class="text-info text-center all-class"></h5>
+                        <h2 class="text-primary text-center course-name"></h2>
+                        <h5 class="text-muted text-center teacher-name"></h5>
+                        <p class="text-center all-class"><span class="all-class text-info"></span>|共<span class="member-number text-danger"></span>人<span style="display: none" class="course-remote-id"></span></p>
+
                     </div>
                 </div>
             </div>
-            <ul  data-role="listview" data-split-icon="grid" data-split-theme="a" data-inset="true">
-                <li id="sameClassHeader" data-role="list-divider">同课同班的同学<span class="ui-li-count">5</span></li>
+            <ul  data-role="listview" data-count-theme="b" data-split-icon="grid" data-split-theme="a" data-inset="true">
                 <li id="sameClassList">
                     <a href="#">
-                        <img src="./res/icon/avatar.jpg">
-                        <img class="lifedjtu-nails" src="./res/icon/avatar.jpg" style="left: 80px">
-                        <img class="lifedjtu-nails" src="./res/icon/avatar.jpg" style="left: 160px">
-                        <img class="lifedjtu-nails" src="./res/icon/avatar.jpg" style="left: 240px">
-                        <img class="lifedjtu-nails" src="./res/icon/avatar.jpg" style="left: 320px">
-                        <img class="lifedjtu-nails" src="./res/icon/avatar.jpg" style="left: 400px">
-                        <img class="lifedjtu-nails" src="./res/icon/avatar.jpg" style="left: 480px">
-                        <h2>holding place</h2>
-                        <p>holding place</p>
+                        <img src="./res/icon/default.jpg">
+                        <h2><span class="text-info">同课同班</span></h2>
+                        <p><span class="member-number badge"></span></p>
+                        <span class="ui-li-count">0</span>
                     </a>
-                    <a href="#purchase" data-rel="popup" data-position-to="window" data-transition="pop">查看成员</a>
+                    <a href="#classMateList" data-bind="0"  data-transition="pop">查看成员</a>
                 </li>
-                <li id="sameGradeHeader" data-role="list-divider">同课同级的同学<span class="ui-li-count">13</span></li>
                 <li id="sameGradeList">
                     <a href="#">
-                        <img src="./res/icon/avatar.jpg">
-                        <img class="lifedjtu-nails" src="./res/icon/avatar.jpg" style="left: 80px">
-                        <img class="lifedjtu-nails" src="./res/icon/avatar.jpg" style="left: 160px">
-                        <img class="lifedjtu-nails" src="./res/icon/avatar.jpg" style="left: 240px">
-                        <img class="lifedjtu-nails" src="./res/icon/avatar.jpg" style="left: 320px">
-                        <img class="lifedjtu-nails" src="./res/icon/avatar.jpg" style="left: 400px">
-                        <img class="lifedjtu-nails" src="./res/icon/avatar.jpg" style="left: 480px">
-                        <h2>holding place</h2>
-                        <p>holding place</p>
+                        <img src="./res/icon/default.jpg">
+                        <h2><span class="text-info">同课同级</span></h2>
+                        <p><span class="member-number badge"></span></p>
+                        <span class="ui-li-count">0</span>
                     </a>
-                    <a href="#purchase" data-rel="popup" data-position-to="window" data-transition="pop">查看成员</a>
+                    <a href="#classMateList" data-bind="1" data-transition="pop">查看成员</a>
                 </li>
-                <li id="sameCourseHeader" data-role="list-divider">同课的同学 <span class="ui-li-count">67</span></li>
                 <li id="sameCourseList">
                     <a href="#">
-                        <img src="./res/icon/avatar.jpg">
-                        <img class="lifedjtu-nails" src="./res/icon/avatar.jpg" style="left: 80px">
-                        <img class="lifedjtu-nails" src="./res/icon/avatar.jpg" style="left: 160px">
-                        <img class="lifedjtu-nails" src="./res/icon/avatar.jpg" style="left: 240px">
-                        <img class="lifedjtu-nails" src="./res/icon/avatar.jpg" style="left: 320px">
-                        <img class="lifedjtu-nails" src="./res/icon/avatar.jpg" style="left: 400px">
-                        <img class="lifedjtu-nails" src="./res/icon/avatar.jpg" style="left: 480px">
-                        <h2>holding place</h2>
-                        <p>holding place</p>
+                        <img src="./res/icon/default.jpg">
+                        <h2><span class="text-info">同课</span></h2>
+                        <p><span class="member-number badge"></span></p>
+                        <span class="ui-li-count">0</span>
                     </a>
-                    <a href="#purchase" data-rel="popup" data-position-to="window" data-transition="pop">查看成员</a>
+                    <a href="#classMateList" data-bind="2" data-transition="pop">查看成员</a>
                 </li>
             </ul>
             <br>
@@ -901,6 +885,35 @@
         <a style="display: none" id="global-classDetail-entry-button" href="#classDetail" data-transition="pop"></a>
 
     </div>
+
+    <div data-role="page" id="classMateList" data-url="classMateList">
+        <div data-role="header" data-theme="a" data-position="fixed">
+            <h1>
+                <br>
+                <span class="lead">from <span class="course-name"></span></span>
+            </h1>
+            <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
+                <br>
+                <a href="../" data-rel="back"  class="ui-btn ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-carat-l ui-btn-icon-left ui-alt-icon ui-nodisc-icon">返回</a>
+            </div>
+            <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
+                <br>
+                <a href="#refresh-mate-list" data-role="refresh-button"  data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-refresh ui-btn-icon-left ui-alt-icon ui-nodisc-icon">刷新</a>
+            </div>
+
+        </div><!-- /header -->
+
+        <div role="main" class="ui-content">
+
+            <ul data-role="listview" data-inset="false">
+
+            </ul>
+
+        </div><!-- /content -->
+
+    </div>
+
+
 
 </body>
 

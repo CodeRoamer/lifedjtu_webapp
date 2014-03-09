@@ -162,6 +162,7 @@ var getDjtuDate = function(){
 var initCourseTable = function(callback){
 
     if(window.localStorage.getItem('djtuDate')){
+        //console.log('存在djtuDate缓存');
         ensureRenderCourseInfo();
     }else{
         triggerLoad("需要同步校园当前周数");
@@ -215,6 +216,7 @@ var ensureRenderCourseInfo = function(){
         });
     }else{
         //alert('here two');
+        //console.log('存在course info缓存');
 
         renderCourseTable(JSON.parse(window.localStorage.getItem('courseInfo')));
         renderCourseList(JSON.parse(window.localStorage.getItem('courseInfo')));
@@ -366,7 +368,7 @@ var renderCourseList = function(courseInfo){
                                 <span class="lead"><span class="glyphicon glyphicon-calendar"></span>周数: <span class="week-span">'+weekStr.substr(1)+'</span>周</span>\
                         ');
                         while(--segmentNum>0){
-                            liDom.next().fadeOut();
+                            (liDom=liDom.next()).hide();
                         }
                     }
 
@@ -1150,7 +1152,7 @@ var ensureRenderCourseInstance = function(updateFlag, remoteId){
             if(data.flag==2){
                 if(window.localStorage){
                     window.localStorage.setItem('courseInstance_'+remoteId, JSON.stringify(data));
-                    renderCourseInstance(data);
+                    renderCourseInstance(data,remoteId);
 
                 }else{
                     handleError("do not support local storage! try to save private key in file");
@@ -1173,7 +1175,7 @@ var ensureRenderCourseInstance = function(updateFlag, remoteId){
                 if(data.flag==2){
                     if(window.localStorage){
                         window.localStorage.setItem('courseInstance_'+remoteId, JSON.stringify(data));
-                        renderCourseInstance(data);
+                        renderCourseInstance(data,remoteId);
 
                     }else{
                         handleError("do not support local storage! try to save private key in file");
@@ -1185,32 +1187,175 @@ var ensureRenderCourseInstance = function(updateFlag, remoteId){
                 handleError(errorThrown);
             });
         }else{
-            renderCourseInstance(JSON.parse(window.localStorage.getItem('courseInstance_'+remoteId)));
+            renderCourseInstance(JSON.parse(window.localStorage.getItem('courseInstance_'+remoteId)),remoteId);
         }
     }
 };
 
-var renderCourseInstance = function(courseInstanceInfo){
+var renderCourseInstance = function(courseInstanceInfo,remoteId){
 
     if(courseInstanceInfo){
         triggerLoad("正在分析数据");
 
-        console.log(courseInstanceInfo['classes'].join('|'));
+        //console.log(courseInstanceInfo['classes'].join('|'));
 
 
         //有哪些班合并上此课？
-        $("#classDetail h5[class*='all-class']").text(courseInstanceInfo['classes'].join('|'));
+        $("#classDetail span[class*='all-class']").text(courseInstanceInfo['classes'].join('|'));
+        $("#classDetail span[class*='member-number']").text(courseInstanceInfo.courseMemberNum);
+        $("#classDetail span[class='course-remote-id']").text(remoteId);
 
         $("#classDetail .goodEval").text(courseInstanceInfo.goodEval);
         $("#classDetail .badEval").text(courseInstanceInfo.badEval);
 
-        $("#classDetail #sameClassHeader").children(".ui-li-count").text(courseInstanceInfo.sameClassMembers.length);
-        $("#classDetail #sameGradeHeader").children(".ui-li-count").text(courseInstanceInfo.sameGradeMembers.length);
-        $("#classDetail #sameCourseHeader").children(".ui-li-count").text(courseInstanceInfo.sameCourseMembers.length);
+        $("#classDetail #sameClassList").contents().find(".member-number").text(courseInstanceInfo.sameClassMemberNum);
+        $("#classDetail #sameGradeList").contents().find(".member-number").text(courseInstanceInfo.sameGradeMemberNum);
+        $("#classDetail #sameCourseList").contents().find(".member-number").text(courseInstanceInfo.sameCourseMemberNum);
 
-        console.log(courseInstanceInfo);
+
+
+        //console.log(courseInstanceInfo);
     }
 
+
+    stopLoad();
+};
+
+var ensureRenderClassMatesList = function(updateFlag,groupFlag,remoteId,pageNum,callback){
+    //console.log(window.localStorage);
+
+    var url;
+    var storeKey;
+    if(groupFlag==0){
+        url = 'webservice/secure/getSameClassMembers.action';
+        storeKey = 'sameClassMembers';
+    }else if(groupFlag==1){
+        url = 'webservice/secure/getSameGradeMembers.action';
+        storeKey = 'sameGradeMembers';
+    }else if(groupFlag==2){
+        url = 'webservice/secure/getSameCourseMembers.action';
+        storeKey = 'sameCourseMembers'
+    }else{
+        console.log("not expected to be here!");
+        url = 'webservice/secure/getSameCourseMembers.action';
+        storeKey = 'sameCourseMembers'
+    }
+
+    //console.log("page number: "+pageNum);
+
+    var cachePageNum = parseInt(window.localStorage.getItem(storeKey+'_'+remoteId+'_pageNum'));
+
+    /**
+     * updateFlag为true的几种情况：刷新||扩展列表
+     * updateFlag为false的几种情况：默认列表  || pageNum应为-1
+     *
+     */
+    if(updateFlag&&cachePageNum<0&&pageNum==undefined){
+        handleError("好友列表已过期，请刷新！");
+        return;
+    }
+
+
+    //第一页从0开始
+    /**
+     * 刷新时无需传页面号，所以采用默认值
+     */
+    if(pageNum==undefined){
+        pageNum = cachePageNum+1||0;
+    }
+
+
+
+    if(updateFlag){
+        triggerLoad("正在获取同学列表");
+
+        getJSON(url,{
+            remoteId:remoteId,
+            studentId:window.localStorage.getItem("studentId"),
+            dynamicPass:window.localStorage.getItem("privateKey"),
+            pageNum:pageNum
+        },function(data,text,xhqr){
+
+            if(data.flag==2){
+                if(callback){
+                    callback();
+                }
+                if(window.localStorage){
+                    //console.log("here!!!!!!!!!!!!");
+                    window.localStorage.setItem(storeKey+'_'+remoteId+'_pageNum', pageNum);
+                    if(pageNum>0&&window.localStorage.getItem(storeKey+'_'+remoteId)){
+                        var cache = JSON.parse(window.localStorage.getItem(storeKey+'_'+remoteId));
+                        $.each(data.memberList, function(index, member){
+                            cache.memberList.push(member);
+                        });
+                        window.localStorage.setItem(storeKey+'_'+remoteId, JSON.stringify(cache));
+                    }else if(pageNum==0){
+                        window.localStorage.setItem(storeKey+'_'+remoteId, JSON.stringify(data));
+                    }
+                    renderClassMatesList(data,remoteId,groupFlag,pageNum);
+
+                }else{
+                    handleError("do not support local storage! try to save private key in file");
+                }
+            }else{
+                handleExceptionData(data);
+            }
+        },function(jqXHR, textStatus, errorThrown){
+            handleError(errorThrown);
+        });
+    }else{
+        if(window.localStorage.getItem(storeKey+'_'+remoteId)){
+            window.localStorage.setItem(storeKey+'_'+remoteId+'_pageNum', -1);
+            renderClassMatesList(JSON.parse(window.localStorage.getItem(storeKey+'_'+remoteId)),remoteId,groupFlag,parseInt(window.localStorage.getItem(storeKey+'_'+remoteId+'_pageNum')));
+        }else{
+            renderClassMatesList(null);
+        }
+    }
+
+}
+
+var renderClassMatesList = function(memberInfo,remoteId,groupFlag,pageNum){
+    triggerLoad("正在分析数据");
+
+    var ulDom = $("#classMateList ul[data-role='listview']");
+    if(pageNum<=0||pageNum==undefined){
+        ulDom.empty();
+    }
+    if(memberInfo){
+        //console.log(members);
+
+        $.each(memberInfo.memberList,function(index, member){
+            //console.log(member);
+            ulDom.append('\
+            <li class="ui-li-has-thumb">\
+                <a href="#memberDetail" class="ui-btn ui-btn-icon-right ui-icon-carat-r">\
+                    <img src="./res/icon/default.jpg">\
+                    '+(member.gender=='女'?'<h2 class="text-danger">'+member.username+'<img src="./res/icon/glyphicons/png/glyphicons_004_girl.png" width="15px" height="15px">':'<h2 class="text-info">'+member.username+'<img src="./res/icon/glyphicons/png/glyphicons_003_user.png" width="16px" height="16px">')+'</h2>\
+                    <p>'+member.major+'('+member.academy+')</p>\
+                </a>\
+            </li>\
+            ');
+        });
+
+        if(memberInfo.memberList.length!=0){
+            ulDom.append('\
+            <li>\
+                <a href="#more-class-mates" data-id="'+remoteId+'" data-bind="'+groupFlag+'" class="ui-btn ui-btn-icon-right ui-icon-carat-d">\
+                    <span class="text-center">查看更多好友</span>\
+                </a>\
+            </li>\
+            ');
+        }else{
+            handleSuccess("没有更多同学了");
+        }
+
+    }else{
+        ulDom.append('\
+            <br>\
+            <h4 class="text-muted text-center"><span class="glyphicon glyphicon-refresh"></span>刷新以获取同学信息</h4>\
+            <br>\
+            ');
+    }
 
     stopLoad();
 };

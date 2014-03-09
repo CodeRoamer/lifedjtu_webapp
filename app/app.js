@@ -123,6 +123,9 @@ $(function() {
     //从周课程切换到日课程
     $("a[href='#course-list-style']").click(function(event){
         event.preventDefault();
+        event.stopPropagation();
+
+        //alert("pre hello");
 
         var weekDay = 1;
 
@@ -133,12 +136,61 @@ $(function() {
         showWeekDayList(weekDay);
 
         $(this).addClass("ui-btn-active");
+        $(this).addClass("ui-state-persist");
         $("a[href='#course-table-style']").removeClass("ui-btn-active");
+        $("a[href='#course-table-style']").removeClass("ui-state-persist");
 
-        $("#course-table-style").fadeOut(50,function(){
-            $("#course-list-style").fadeIn(100);
+        $("#course-table-style").fadeOut(0,function(){
+            $("#course-list-style").fadeIn(0);
+
         });
 
+
+
+    });
+
+    //swipe event
+    $("#course-list-style ul[data-role='listview']").on('swipeleft',function(event){
+        event.preventDefault();
+        event.stopPropagation();
+        //alert("left!");
+
+        var weekDay = parseInt($("#course-list-style table[class*='week-table']").contents().find("span[class*='badge']").parent('a').attr('data-order'))+1;
+
+        //alert($("#course-list-style table[class*='week-table']").contents().find("span[class*='badge']").text());
+
+        //alert(weekDay);
+
+
+        if(weekDay>7){
+            weekDay = weekDay%7;
+        }
+
+        //alert(weekDay);
+
+
+        showWeekDayList(weekDay);
+
+    });
+     //swipe event
+    $("#course-list-style ul[data-role='listview']").on('swiperight',function(event){
+        event.preventDefault();
+        event.stopPropagation();
+        //alert("right!");
+        var weekDay = parseInt($("#course-list-style table[class*='week-table']").contents().find("span[class*='badge']").parent('a').attr('data-order'))-1;
+
+        //alert($("#course-list-style table[class*='week-table']").contents().find("span[class*='badge']").text());
+
+        //alert(weekDay);
+
+
+        if(weekDay<1){
+            weekDay+=7;
+        }
+
+        //alert(weekDay);
+
+        showWeekDayList(weekDay);
     });
 
     //在日课程中切换周几的课程
@@ -201,6 +253,45 @@ $(function() {
 
         //开始执行远程数据查询
         ensureRenderCourseInstance(false,remoteId);
+    });
+
+    //加载同学列表，此事件触发属于classDetail页面
+    $(document).on("click", "#classDetail a[href='#classMateList']", function(event){
+        var remoteId = $("#classDetail span[class='course-remote-id']").text();
+        var groupFlag = $(this).attr("data-bind");
+        var courseName = $("#classDetail span[class*='course-name']").text();
+
+        //刷新按钮需要这两个参数！！！
+        $("#classMateList a[href='#refresh-mate-list']").attr("data-bind",groupFlag);
+        $("#classMateList a[href='#refresh-mate-list']").attr("data-id",remoteId);
+
+
+        $("#classMateList .course-name").text(courseName);
+
+        ensureRenderClassMatesList(false,parseInt(groupFlag),remoteId);
+    });
+    //classDetail页面的刷新按钮
+    $("#classDetail a[href='#refresh-course-info']").click(function(event){
+        var remoteId = $("#classDetail span[class='course-remote-id']").text();
+
+        ensureRenderCourseInstance(true,remoteId);
+    });
+
+    $(document).on('click', "#classMateList a[href='#more-class-mates']",function(event){
+        var remoteId = $(this).attr("data-id");
+        var groupFlag = $(this).attr("data-bind");
+        var me = this;
+
+        ensureRenderClassMatesList(true,parseInt(groupFlag),remoteId,undefined,function(){
+            $(me).fadeOut(150);
+        });
+    });
+
+    $("#classMateList a[href='#refresh-mate-list']").click(function(event){
+        var groupFlag = $("#classMateList a[href='#refresh-mate-list']").attr("data-bind");
+        var remoteId = $("#classMateList a[href='#refresh-mate-list']").attr("data-id");
+
+        ensureRenderClassMatesList(true,parseInt(groupFlag),remoteId,0);
     });
 
 
