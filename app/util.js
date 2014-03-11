@@ -8,8 +8,8 @@
 
 
 //global host
-//var globalHost = "http://localhost:9119/lifedjtu/";
-var globalHost = "http://lifedjtu.duapp.com/";
+var globalHost = "http://localhost:9119/lifedjtu/";
+//var globalHost = "http://lifedjtu.duapp.com/";
 
 
 var triggerLoad = function(message){
@@ -362,7 +362,7 @@ var renderCourseList = function(courseInfo){
 
                         aDom.children('.segment').text(segment+'-'+(parseInt(segment)+segmentNum-1));
                         aDom.append('\
-                        <span class="text-info class-name" style="font-size: 20px">'+course.courseName+'</span><br>&nbsp;&nbsp;<span style="display: none" class="remote-id">'+course.courseRemoteId+'</span>\
+                        <span class="text-info class-name" style="font-size: 20px">'+course.courseName+'</span><br>&nbsp;&nbsp;<span style="display: none" class="course-alias">'+course.courseAlias+'</span><span style="display: none" class="remote-id">'+course.courseRemoteId+'</span>\
                             <span class="lead"><span class="glyphicon glyphicon-user"></span>老师: <span class="teacher-name">'+course.teacherName+'</span></span><br>&nbsp;&nbsp;\
                             <span class="lead"><span class="glyphicon glyphicon-map-marker"></span>地点: <span class="room-name">'+roomName+'</span></span><br>&nbsp;&nbsp;\
                                 <span class="lead"><span class="glyphicon glyphicon-calendar"></span>周数: <span class="week-span">'+weekStr.substr(1)+'</span>周</span>\
@@ -1113,12 +1113,14 @@ var createStoryMap = function(roomTakenInfo){
     }
 };
 
+//判断字符串上是否以数字或字母开始
 var startWithLetterOrDigit = function(str){
     var reg = /^[a-zA-Z0-9\-]+/;
 
     return reg.test(str);
 };
 
+//str全是0吗
 var strAllZero = function(str){
     for(var i = 0; i < str.length; ++i){
         if(str[i]=='1'){
@@ -1140,19 +1142,20 @@ var prefixFullfill = function(str, prefix){
 
 
 //单个课程实例的抓取
-var ensureRenderCourseInstance = function(updateFlag, remoteId){
+var ensureRenderCourseInstance = function(updateFlag, courseAlias, courseRemoteId){
     if(updateFlag){
         triggerLoad("正在获取课程信息");
 
         getJSON("webservice/secure/getCourseInstance.action",{
-            remoteId:remoteId,
+            courseAlias:courseAlias,
+            courseRemoteId:courseRemoteId,
             studentId:window.localStorage.getItem("studentId"),
             dynamicPass:window.localStorage.getItem("privateKey")
         },function(data,text,xhqr){
             if(data.flag==2){
                 if(window.localStorage){
-                    window.localStorage.setItem('courseInstance_'+remoteId, JSON.stringify(data));
-                    renderCourseInstance(data,remoteId);
+                    window.localStorage.setItem('courseInstance_'+courseRemoteId, JSON.stringify(data));
+                    renderCourseInstance(data,courseAlias, courseRemoteId);
 
                 }else{
                     handleError("do not support local storage! try to save private key in file");
@@ -1164,18 +1167,19 @@ var ensureRenderCourseInstance = function(updateFlag, remoteId){
             handleError(errorThrown);
         });
     }else{
-        if(!window.localStorage.getItem('courseInstance_'+remoteId)){
+        if(!window.localStorage.getItem('courseInstance_'+courseRemoteId)){
             triggerLoad("正在获取课程信息");
 
             getJSON("webservice/secure/getCourseInstance.action",{
-                remoteId:remoteId,
+                courseAlias:courseAlias,
+                courseRemoteId:courseRemoteId,
                 studentId:window.localStorage.getItem("studentId"),
                 dynamicPass:window.localStorage.getItem("privateKey")
             },function(data,text,xhqr){
                 if(data.flag==2){
                     if(window.localStorage){
-                        window.localStorage.setItem('courseInstance_'+remoteId, JSON.stringify(data));
-                        renderCourseInstance(data,remoteId);
+                        window.localStorage.setItem('courseInstance_'+courseRemoteId, JSON.stringify(data));
+                        renderCourseInstance(data,courseAlias, courseRemoteId);
 
                     }else{
                         handleError("do not support local storage! try to save private key in file");
@@ -1187,12 +1191,12 @@ var ensureRenderCourseInstance = function(updateFlag, remoteId){
                 handleError(errorThrown);
             });
         }else{
-            renderCourseInstance(JSON.parse(window.localStorage.getItem('courseInstance_'+remoteId)),remoteId);
+            renderCourseInstance(JSON.parse(window.localStorage.getItem('courseInstance_'+courseRemoteId)),courseAlias, courseRemoteId);
         }
     }
 };
 
-var renderCourseInstance = function(courseInstanceInfo,remoteId){
+var renderCourseInstance = function(courseInstanceInfo,courseAlias, courseRemoteId){
 
     if(courseInstanceInfo){
         triggerLoad("正在分析数据");
@@ -1203,25 +1207,64 @@ var renderCourseInstance = function(courseInstanceInfo,remoteId){
         //有哪些班合并上此课？
         $("#classDetail span[class*='all-class']").text(courseInstanceInfo['classes'].join('|'));
         $("#classDetail span[class*='member-number']").text(courseInstanceInfo.courseMemberNum);
-        $("#classDetail span[class='course-remote-id']").text(remoteId);
+        $("#classDetail span[class='courseId']").text(courseInstanceInfo.courseId);
+        $("#classDetail span[class='courseInstanceId']").text(courseInstanceInfo.courseInstanceId);
+
+        $("#classDetail span[class='remote-id']").text(courseRemoteId);
+        $("#classDetail span[class='course-alias']").text(courseAlias);
+        //是sameClass还是sameCourse，赋值上对应的id
+        $("#classDetail a[data-bind='0']").attr('data-id',courseInstanceInfo.courseInstanceId);
+        $("#classDetail a[data-bind='1']").attr('data-id',courseInstanceInfo.courseId);
 
         $("#classDetail .goodEval").text(courseInstanceInfo.goodEval);
         $("#classDetail .badEval").text(courseInstanceInfo.badEval);
 
         $("#classDetail #sameClassList").contents().find(".member-number").text(courseInstanceInfo.sameClassMemberNum);
-        $("#classDetail #sameGradeList").contents().find(".member-number").text(courseInstanceInfo.sameGradeMemberNum);
         $("#classDetail #sameCourseList").contents().find(".member-number").text(courseInstanceInfo.sameCourseMemberNum);
 
 
 
         //console.log(courseInstanceInfo);
+    }else{
+        handleError("没有课程数据可供分析");
     }
 
 
     stopLoad();
 };
 
-var ensureRenderClassMatesList = function(updateFlag,groupFlag,remoteId,pageNum,callback){
+var resetCourseInstance = function(){
+    //有哪些班合并上此课？
+    //合班上课信息
+    $("#classDetail span[class*='all-class']").text('');
+    //共有多少人
+    $("#classDetail span[class*='member-number']").text('');
+
+    $("#classDetail span[class='courseId']").text('');
+    $("#classDetail span[class='courseInstanceId']").text('');
+
+    $("#classDetail span[class='remote-id']").text('');
+    $("#classDetail span[class='course-alias']").text('');
+    //是sameClass还是sameCourse
+    $("#classDetail a[data-bind='0']").attr('data-id','');
+    $("#classDetail a[data-bind='1']").attr('data-id','');
+
+    $("#classDetail .goodEval").text(0);
+    $("#classDetail .badEval").text(0);
+
+    $("#classDetail #sameClassList").contents().find(".member-number").text(0);
+    $("#classDetail #sameCourseList").contents().find(".member-number").text(0);
+}
+
+/**
+ * bindId可以CourseId，也可以为CourseInstanceId
+ * @param updateFlag
+ * @param groupFlag
+ * @param bindId
+ * @param pageNum
+ * @param callback
+ */
+var ensureRenderClassMatesList = function(updateFlag,groupFlag,bindId,pageNum,callback){
     //console.log(window.localStorage);
 
     var url;
@@ -1230,9 +1273,6 @@ var ensureRenderClassMatesList = function(updateFlag,groupFlag,remoteId,pageNum,
         url = 'webservice/secure/getSameClassMembers.action';
         storeKey = 'sameClassMembers';
     }else if(groupFlag==1){
-        url = 'webservice/secure/getSameGradeMembers.action';
-        storeKey = 'sameGradeMembers';
-    }else if(groupFlag==2){
         url = 'webservice/secure/getSameCourseMembers.action';
         storeKey = 'sameCourseMembers'
     }else{
@@ -1243,7 +1283,7 @@ var ensureRenderClassMatesList = function(updateFlag,groupFlag,remoteId,pageNum,
 
     //console.log("page number: "+pageNum);
 
-    var cachePageNum = parseInt(window.localStorage.getItem(storeKey+'_'+remoteId+'_pageNum'));
+    var cachePageNum = parseInt(window.localStorage.getItem(storeKey+'_'+bindId+'_pageNum'));
 
     /**
      * updateFlag为true的几种情况：刷新||扩展列表
@@ -1270,7 +1310,7 @@ var ensureRenderClassMatesList = function(updateFlag,groupFlag,remoteId,pageNum,
         triggerLoad("正在获取同学列表");
 
         getJSON(url,{
-            remoteId:remoteId,
+            bindId:bindId,
             studentId:window.localStorage.getItem("studentId"),
             dynamicPass:window.localStorage.getItem("privateKey"),
             pageNum:pageNum
@@ -1282,17 +1322,17 @@ var ensureRenderClassMatesList = function(updateFlag,groupFlag,remoteId,pageNum,
                 }
                 if(window.localStorage){
                     //console.log("here!!!!!!!!!!!!");
-                    window.localStorage.setItem(storeKey+'_'+remoteId+'_pageNum', pageNum);
-                    if(pageNum>0&&window.localStorage.getItem(storeKey+'_'+remoteId)){
-                        var cache = JSON.parse(window.localStorage.getItem(storeKey+'_'+remoteId));
+                    window.localStorage.setItem(storeKey+'_'+bindId+'_pageNum', pageNum);
+                    if(pageNum>0&&window.localStorage.getItem(storeKey+'_'+bindId)){
+                        var cache = JSON.parse(window.localStorage.getItem(storeKey+'_'+bindId));
                         $.each(data.memberList, function(index, member){
                             cache.memberList.push(member);
                         });
-                        window.localStorage.setItem(storeKey+'_'+remoteId, JSON.stringify(cache));
+                        window.localStorage.setItem(storeKey+'_'+bindId, JSON.stringify(cache));
                     }else if(pageNum==0){
-                        window.localStorage.setItem(storeKey+'_'+remoteId, JSON.stringify(data));
+                        window.localStorage.setItem(storeKey+'_'+bindId, JSON.stringify(data));
                     }
-                    renderClassMatesList(data,remoteId,groupFlag,pageNum);
+                    renderClassMatesList(data,groupFlag,bindId,pageNum);
 
                 }else{
                     handleError("do not support local storage! try to save private key in file");
@@ -1304,9 +1344,9 @@ var ensureRenderClassMatesList = function(updateFlag,groupFlag,remoteId,pageNum,
             handleError(errorThrown);
         });
     }else{
-        if(window.localStorage.getItem(storeKey+'_'+remoteId)){
-            window.localStorage.setItem(storeKey+'_'+remoteId+'_pageNum', -1);
-            renderClassMatesList(JSON.parse(window.localStorage.getItem(storeKey+'_'+remoteId)),remoteId,groupFlag,parseInt(window.localStorage.getItem(storeKey+'_'+remoteId+'_pageNum')));
+        if(window.localStorage.getItem(storeKey+'_'+bindId)){
+            window.localStorage.setItem(storeKey+'_'+bindId+'_pageNum', -1);
+            renderClassMatesList(JSON.parse(window.localStorage.getItem(storeKey+'_'+bindId)),groupFlag,bindId,parseInt(window.localStorage.getItem(storeKey+'_'+bindId+'_pageNum')));
         }else{
             renderClassMatesList(null);
         }
@@ -1314,7 +1354,7 @@ var ensureRenderClassMatesList = function(updateFlag,groupFlag,remoteId,pageNum,
 
 }
 
-var renderClassMatesList = function(memberInfo,remoteId,groupFlag,pageNum){
+var renderClassMatesList = function(memberInfo,groupFlag,bindId,pageNum){
     triggerLoad("正在分析数据");
 
     var ulDom = $("#classMateList ul[data-role='listview']");
@@ -1328,7 +1368,7 @@ var renderClassMatesList = function(memberInfo,remoteId,groupFlag,pageNum){
             //console.log(member);
             ulDom.append('\
             <li class="ui-li-has-thumb">\
-                <a href="#memberDetail" class="ui-btn ui-btn-icon-right ui-icon-carat-r">\
+                <a href="user.html" data-transition="slide" class="ui-btn ui-btn-icon-right ui-icon-carat-r">\
                     <img src="./res/icon/default.jpg">\
                     '+(member.gender=='女'?'<h2 class="text-danger">'+member.username+'<img src="./res/icon/glyphicons/png/glyphicons_004_girl.png" width="15px" height="15px">':'<h2 class="text-info">'+member.username+'<img src="./res/icon/glyphicons/png/glyphicons_003_user.png" width="16px" height="16px">')+'</h2>\
                     <p>'+member.major+'('+member.academy+')</p>\
@@ -1340,7 +1380,7 @@ var renderClassMatesList = function(memberInfo,remoteId,groupFlag,pageNum){
         if(memberInfo.memberList.length!=0){
             ulDom.append('\
             <li>\
-                <a href="#more-class-mates" data-id="'+remoteId+'" data-bind="'+groupFlag+'" class="ui-btn ui-btn-icon-right ui-icon-carat-d">\
+                <a href="#more-class-mates" data-id="'+bindId+'" data-bind="'+groupFlag+'" class="ui-btn ui-btn-icon-right ui-icon-carat-d">\
                     <span class="text-center">查看更多好友</span>\
                 </a>\
             </li>\

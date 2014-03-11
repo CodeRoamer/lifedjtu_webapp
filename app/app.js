@@ -232,14 +232,19 @@ $(function() {
         //alert("hello,you click!");
 
         //console.log($(this).html());
-
         event.preventDefault();
+        //重置页面
+        resetCourseInstance();
+
         //课程名
         var className = $(this).children(".class-name").text();
         //老师的名称
         var teacherName = $(this).contents().find(".teacher-name").text();
         //课程remoteId
         var remoteId = $(this).children('.remote-id').text();
+        //课程别名
+        var courseAlias = $(this).children('.course-alias').text();
+
         if(!className||!teacherName||className==''||teacherName==''){
             handleWarning("此处没有可以显示的课程！");
             return;
@@ -252,46 +257,46 @@ $(function() {
         $("#global-classDetail-entry-button").trigger('click');
 
         //开始执行远程数据查询
-        ensureRenderCourseInstance(false,remoteId);
+        ensureRenderCourseInstance(false,courseAlias,remoteId);
     });
 
     //加载同学列表，此事件触发属于classDetail页面
     $(document).on("click", "#classDetail a[href='#classMateList']", function(event){
-        var remoteId = $("#classDetail span[class='course-remote-id']").text();
+        var bindId = $(this).attr('data-id');
         var groupFlag = $(this).attr("data-bind");
         var courseName = $("#classDetail span[class*='course-name']").text();
 
         //刷新按钮需要这两个参数！！！
         $("#classMateList a[href='#refresh-mate-list']").attr("data-bind",groupFlag);
-        $("#classMateList a[href='#refresh-mate-list']").attr("data-id",remoteId);
+        $("#classMateList a[href='#refresh-mate-list']").attr("data-id",bindId);
 
 
         $("#classMateList .course-name").text(courseName);
 
-        ensureRenderClassMatesList(false,parseInt(groupFlag),remoteId);
+        ensureRenderClassMatesList(false,parseInt(groupFlag),bindId);
     });
     //classDetail页面的刷新按钮
     $("#classDetail a[href='#refresh-course-info']").click(function(event){
-        var remoteId = $("#classDetail span[class='course-remote-id']").text();
-
-        ensureRenderCourseInstance(true,remoteId);
+        var remoteId = $("#classDetail span[class='remote-id']").text();
+        var courseAlias = $("#classDetail span[class='course-alias']").text();
+        ensureRenderCourseInstance(true,courseAlias,remoteId);
     });
 
     $(document).on('click', "#classMateList a[href='#more-class-mates']",function(event){
-        var remoteId = $(this).attr("data-id");
+        var bindId = $(this).attr("data-id");
         var groupFlag = $(this).attr("data-bind");
         var me = this;
 
-        ensureRenderClassMatesList(true,parseInt(groupFlag),remoteId,undefined,function(){
+        ensureRenderClassMatesList(true,parseInt(groupFlag),bindId,undefined,function(){
             $(me).fadeOut(150);
         });
     });
 
     $("#classMateList a[href='#refresh-mate-list']").click(function(event){
-        var groupFlag = $("#classMateList a[href='#refresh-mate-list']").attr("data-bind");
-        var remoteId = $("#classMateList a[href='#refresh-mate-list']").attr("data-id");
+        var groupFlag = $(this).attr("data-bind");
+        var bindId = $(this).attr("data-id");
 
-        ensureRenderClassMatesList(true,parseInt(groupFlag),remoteId,0);
+        ensureRenderClassMatesList(true,parseInt(groupFlag),bindId,0);
     });
 
 

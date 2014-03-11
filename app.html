@@ -841,38 +841,32 @@
                     <div class="">
                         <h2 class="text-primary text-center course-name"></h2>
                         <h5 class="text-muted text-center teacher-name"></h5>
-                        <p class="text-center all-class"><span class="all-class text-info"></span>|共<span class="member-number text-danger"></span>人<span style="display: none" class="course-remote-id"></span></p>
+                        <p class="text-center all-class"><span class="all-class text-info"></span>|共<span class="member-number text-danger"></span>人</p>
+                        <p style="display: none"><span class="courseId"></span><span class="courseInstanceId"></span></p>
+                        <p style="display: none"><span class="remote-id"></span><span class="course-alias"></span></p>
 
                     </div>
                 </div>
             </div>
             <ul  data-role="listview" data-count-theme="b" data-split-icon="grid" data-split-theme="a" data-inset="true">
                 <li id="sameClassList">
-                    <a href="#">
+                    <a href="chat-page.html" data-transition="slidedown">
                         <img src="./res/icon/default.jpg">
                         <h2><span class="text-info">同课同班</span></h2>
                         <p><span class="member-number badge"></span></p>
                         <span class="ui-li-count">0</span>
                     </a>
-                    <a href="#classMateList" data-bind="0"  data-transition="pop">查看成员</a>
+                    <a href="#classMateList" data-bind="0" data-id=""  data-transition="pop">查看成员</a>
                 </li>
-                <li id="sameGradeList">
-                    <a href="#">
-                        <img src="./res/icon/default.jpg">
-                        <h2><span class="text-info">同课同级</span></h2>
-                        <p><span class="member-number badge"></span></p>
-                        <span class="ui-li-count">0</span>
-                    </a>
-                    <a href="#classMateList" data-bind="1" data-transition="pop">查看成员</a>
-                </li>
+
                 <li id="sameCourseList">
-                    <a href="#">
+                    <a href="chat-page.html" data-transition="slidedown">
                         <img src="./res/icon/default.jpg">
                         <h2><span class="text-info">同课</span></h2>
                         <p><span class="member-number badge"></span></p>
                         <span class="ui-li-count">0</span>
                     </a>
-                    <a href="#classMateList" data-bind="2" data-transition="pop">查看成员</a>
+                    <a href="#classMateList" data-bind="1" data-id="" data-transition="pop">查看成员</a>
                 </li>
             </ul>
             <br>
@@ -912,6 +906,8 @@
         </div><!-- /content -->
 
     </div>
+
+
 
 
 
