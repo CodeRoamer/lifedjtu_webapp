@@ -8,8 +8,8 @@
 
 
 //global host
-var globalHost = "http://localhost:9119/lifedjtu/";
-//var globalHost = "http://lifedjtu.duapp.com/";
+//var globalHost = "http://localhost:9119/lifedjtu/";
+var globalHost = "http://lifedjtu.duapp.com/";
 
 
 var triggerLoad = function(message){
