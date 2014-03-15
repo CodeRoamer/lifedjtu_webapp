@@ -8,8 +8,8 @@
 
 
 //global host
-//var globalHost = "http://localhost:9119/lifedjtu/";
-var globalHost = "http://lifedjtu.duapp.com/";
+var globalHost = "http://localhost:9119/lifedjtu/";
+//var globalHost = "http://lifedjtu.duapp.com/";
 
 
 var triggerLoad = function(message){
@@ -1207,14 +1207,14 @@ var renderCourseInstance = function(courseInstanceInfo,courseAlias, courseRemote
         //有哪些班合并上此课？
         $("#classDetail span[class*='all-class']").text(courseInstanceInfo['classes'].join('|'));
         $("#classDetail span[class*='member-number']").text(courseInstanceInfo.courseMemberNum);
-        $("#classDetail span[class='courseId']").text(courseInstanceInfo.courseId);
-        $("#classDetail span[class='courseInstanceId']").text(courseInstanceInfo.courseInstanceId);
+        $("#classDetail span[class='courseGroupId']").text(courseInstanceInfo.courseGroupId);
+        $("#classDetail span[class='courseInstanceGroupId']").text(courseInstanceInfo.courseInstanceGroupId);
 
         $("#classDetail span[class='remote-id']").text(courseRemoteId);
         $("#classDetail span[class='course-alias']").text(courseAlias);
         //是sameClass还是sameCourse，赋值上对应的id
-        $("#classDetail a[data-bind='0']").attr('data-id',courseInstanceInfo.courseInstanceId);
-        $("#classDetail a[data-bind='1']").attr('data-id',courseInstanceInfo.courseId);
+        $("#classDetail a[data-bind='0']").attr('data-id',courseInstanceInfo.courseInstanceGroupId);
+        $("#classDetail a[data-bind='1']").attr('data-id',courseInstanceInfo.courseGroupId);
 
         $("#classDetail .goodEval").text(courseInstanceInfo.goodEval);
         $("#classDetail .badEval").text(courseInstanceInfo.badEval);
@@ -1267,6 +1267,7 @@ var resetCourseInstance = function(){
 var ensureRenderClassMatesList = function(updateFlag,groupFlag,bindId,pageNum,callback){
     //console.log(window.localStorage);
 
+    /*
     var url;
     var storeKey;
     if(groupFlag==0){
@@ -1280,10 +1281,10 @@ var ensureRenderClassMatesList = function(updateFlag,groupFlag,bindId,pageNum,ca
         url = 'webservice/secure/getSameCourseMembers.action';
         storeKey = 'sameCourseMembers'
     }
-
+    */
     //console.log("page number: "+pageNum);
 
-    var cachePageNum = parseInt(window.localStorage.getItem(storeKey+'_'+bindId+'_pageNum'));
+    var cachePageNum = parseInt(window.localStorage.getItem('group_'+bindId+'_pageNum'));
 
     /**
      * updateFlag为true的几种情况：刷新||扩展列表
@@ -1309,7 +1310,7 @@ var ensureRenderClassMatesList = function(updateFlag,groupFlag,bindId,pageNum,ca
     if(updateFlag){
         triggerLoad("正在获取同学列表");
 
-        getJSON(url,{
+        getJSON('webservice/secure/getGroupMembers.action',{
             bindId:bindId,
             studentId:window.localStorage.getItem("studentId"),
             dynamicPass:window.localStorage.getItem("privateKey"),
@@ -1322,17 +1323,26 @@ var ensureRenderClassMatesList = function(updateFlag,groupFlag,bindId,pageNum,ca
                 }
                 if(window.localStorage){
                     //console.log("here!!!!!!!!!!!!");
-                    window.localStorage.setItem(storeKey+'_'+bindId+'_pageNum', pageNum);
-                    if(pageNum>0&&window.localStorage.getItem(storeKey+'_'+bindId)){
-                        var cache = JSON.parse(window.localStorage.getItem(storeKey+'_'+bindId));
+                    window.localStorage.setItem('group_'+bindId+'_pageNum', pageNum);
+
+                    //只抽取学生学号
+                    var studentIdArray = [];
+                    $.each(data.memberList, function(index, member){
+                        studentIdArray.push(member.studentId);
+                    });
+
+                    //更新用户信息缓存，群组中只存储学号，这样避免冗余存储用户
+                    updateUserCache(data.memberList);
+                    if(pageNum>0&&window.localStorage.getItem('group_'+bindId)){
+                        var cache = JSON.parse(window.localStorage.getItem('group_'+bindId));
                         $.each(data.memberList, function(index, member){
-                            cache.memberList.push(member);
+                            cache.push(member.studentId);
                         });
-                        window.localStorage.setItem(storeKey+'_'+bindId, JSON.stringify(cache));
+                        window.localStorage.setItem('group_'+bindId, JSON.stringify(cache));
                     }else if(pageNum==0){
-                        window.localStorage.setItem(storeKey+'_'+bindId, JSON.stringify(data));
+                        window.localStorage.setItem('group_'+bindId, JSON.stringify(studentIdArray));
                     }
-                    renderClassMatesList(data,groupFlag,bindId,pageNum);
+                    renderClassMatesList(studentIdArray,groupFlag,bindId,pageNum);
 
                 }else{
                     handleError("do not support local storage! try to save private key in file");
@@ -1344,9 +1354,9 @@ var ensureRenderClassMatesList = function(updateFlag,groupFlag,bindId,pageNum,ca
             handleError(errorThrown);
         });
     }else{
-        if(window.localStorage.getItem(storeKey+'_'+bindId)){
-            window.localStorage.setItem(storeKey+'_'+bindId+'_pageNum', -1);
-            renderClassMatesList(JSON.parse(window.localStorage.getItem(storeKey+'_'+bindId)),groupFlag,bindId,parseInt(window.localStorage.getItem(storeKey+'_'+bindId+'_pageNum')));
+        if(window.localStorage.getItem('group_'+bindId)){
+            window.localStorage.setItem('group_'+bindId+'_pageNum', -1);
+            renderClassMatesList(JSON.parse(window.localStorage.getItem('group_'+bindId)),groupFlag,bindId,parseInt(window.localStorage.getItem('group_'+bindId+'_pageNum')));
         }else{
             renderClassMatesList(null);
         }
@@ -1354,6 +1364,7 @@ var ensureRenderClassMatesList = function(updateFlag,groupFlag,bindId,pageNum,ca
 
 }
 
+//memberInfo本来就已经是一个数组了，而且仅是studentId构成的字符串数组
 var renderClassMatesList = function(memberInfo,groupFlag,bindId,pageNum){
     triggerLoad("正在分析数据");
 
@@ -1362,10 +1373,13 @@ var renderClassMatesList = function(memberInfo,groupFlag,bindId,pageNum){
         ulDom.empty();
     }
     if(memberInfo){
-        //console.log(members);
+        //console.log(memberInfo);
 
-        $.each(memberInfo.memberList,function(index, member){
+        var users_cache = getUserCache();
+
+        $.each(memberInfo,function(index, studentId){
             //console.log(member);
+            var member = users_cache[studentId];
             ulDom.append('\
             <li class="ui-li-has-thumb">\
                 <a href="user.html" data-transition="slide" class="ui-btn ui-btn-icon-right ui-icon-carat-r">\
@@ -1377,7 +1391,7 @@ var renderClassMatesList = function(memberInfo,groupFlag,bindId,pageNum){
             ');
         });
 
-        if(memberInfo.memberList.length!=0){
+        if(memberInfo.length!=0){
             ulDom.append('\
             <li>\
                 <a href="#more-class-mates" data-id="'+bindId+'" data-bind="'+groupFlag+'" class="ui-btn ui-btn-icon-right ui-icon-carat-d">\
@@ -1398,4 +1412,23 @@ var renderClassMatesList = function(memberInfo,groupFlag,bindId,pageNum){
     }
 
     stopLoad();
+};
+
+var updateUserCache = function(memberList){
+    if(!memberList){
+        return;
+    }
+
+    var users_cache = JSON.parse(window.localStorage.getItem("users_cache")||'{}');
+    if(Array.isArray(memberList)){
+        for(var index in memberList){
+            //console.log("caching user!!!! here!!!");
+            users_cache[memberList[index].studentId] = memberList[index];
+        }
+    }
+    window.localStorage.setItem('users_cache',JSON.stringify(users_cache));
+};
+
+var getUserCache = function(){
+    return JSON.parse(window.localStorage.getItem('users_cache'));
 };

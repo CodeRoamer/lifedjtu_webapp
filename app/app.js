@@ -86,7 +86,7 @@ $(function() {
 
 
     //启动时间扫描
-    setInterval(updateDjtuDate(),60000);
+    setInterval(updateDjtuDate,60000);
 
 
     initCourseTable(updateDjtuDate);
