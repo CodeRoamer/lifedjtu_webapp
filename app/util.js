@@ -11,6 +11,48 @@
 var globalHost = "http://localhost:9119/lifedjtu/";
 //var globalHost = "http://lifedjtu.duapp.com/";
 
+var getItemFromStorage = function(item){
+    return JSON.parse(window.localStorage.getItem(item));
+};
+
+var setItemToStorage = function(item,obj){
+    window.localStorage.setItem(item,JSON.stringify(obj));
+};
+
+/**
+ *
+ * @param time(Number)
+ */
+var formatMessageTime = function(time){
+    var date = new Date();
+    date.setTime(parseInt(time));
+
+    var now = new Date();
+    now.setHours(0);
+    now.setMinutes(0);
+    now.setSeconds(0);
+    now.setMilliseconds(0);
+
+    if(date.getTime()-now.getTime()<0){
+        if(date.getTime()+(1000*60*60*24)-now.getTime()<0){
+            var day = date.getDay();
+            switch (day){
+                case 1:return '星期一';
+                case 2:return '星期二';
+                case 3:return '星期三';
+                case 4:return '星期四';
+                case 5:return '星期五';
+                case 6:return '星期六';
+                case 7:return '星期日';
+            }
+        }else{
+            return '昨天';
+        }
+    }else{
+        return date.getHours()+':'+date.getMinutes();
+    }
+
+};
 
 var triggerLoad = function(message){
     if(!message){
@@ -163,6 +205,7 @@ var initCourseTable = function(callback){
 
     if(window.localStorage.getItem('djtuDate')){
         //console.log('存在djtuDate缓存');
+        callback();
         ensureRenderCourseInfo();
     }else{
         triggerLoad("需要同步校园当前周数");
@@ -1264,7 +1307,7 @@ var resetCourseInstance = function(){
  * @param pageNum
  * @param callback
  */
-var ensureRenderClassMatesList = function(updateFlag,groupFlag,bindId,pageNum,callback){
+var ensureRenderClassMatesList = function(updateFlag,groupFlag,bindId,courseName,pageNum,callback){
     //console.log(window.localStorage);
 
     /*
@@ -1333,15 +1376,16 @@ var ensureRenderClassMatesList = function(updateFlag,groupFlag,bindId,pageNum,ca
 
                     //更新用户信息缓存，群组中只存储学号，这样避免冗余存储用户
                     updateUserCache(data.memberList);
-                    if(pageNum>0&&window.localStorage.getItem('group_'+bindId)){
-                        var cache = JSON.parse(window.localStorage.getItem('group_'+bindId));
-                        $.each(data.memberList, function(index, member){
-                            cache.push(member.studentId);
-                        });
-                        window.localStorage.setItem('group_'+bindId, JSON.stringify(cache));
-                    }else if(pageNum==0){
-                        window.localStorage.setItem('group_'+bindId, JSON.stringify(studentIdArray));
-                    }
+                    updateGroupCache(bindId,groupFlag,courseName,data.memberList);
+//                    if(pageNum>0&&window.localStorage.getItem('group_'+bindId)){
+//                        var cache = JSON.parse(window.localStorage.getItem('group_'+bindId));
+//                        $.each(data.memberList, function(index, member){
+//                            cache.push(member.studentId);
+//                        });
+//                        window.localStorage.setItem('group_'+bindId, JSON.stringify(cache));
+//                    }else if(pageNum==0){
+//                        window.localStorage.setItem('group_'+bindId, JSON.stringify(studentIdArray));
+//                    }
                     renderClassMatesList(studentIdArray,groupFlag,bindId,pageNum);
 
                 }else{
@@ -1354,9 +1398,9 @@ var ensureRenderClassMatesList = function(updateFlag,groupFlag,bindId,pageNum,ca
             handleError(errorThrown);
         });
     }else{
-        if(window.localStorage.getItem('group_'+bindId)){
+        if(getGroupCache(bindId)){
             window.localStorage.setItem('group_'+bindId+'_pageNum', -1);
-            renderClassMatesList(JSON.parse(window.localStorage.getItem('group_'+bindId)),groupFlag,bindId,parseInt(window.localStorage.getItem('group_'+bindId+'_pageNum')));
+            renderClassMatesList(getGroupCache(bindId).groupMembers,groupFlag,bindId,parseInt(window.localStorage.getItem('group_'+bindId+'_pageNum')));
         }else{
             renderClassMatesList(null);
         }
@@ -1414,8 +1458,9 @@ var renderClassMatesList = function(memberInfo,groupFlag,bindId,pageNum){
     stopLoad();
 };
 
+//负责更新user_cache，全局只有一个user_cache，负责存储用户信息
 var updateUserCache = function(memberList){
-    if(!memberList){
+    if(!memberList||memberList.length==0){
         return;
     }
 
@@ -1429,6 +1474,276 @@ var updateUserCache = function(memberList){
     window.localStorage.setItem('users_cache',JSON.stringify(users_cache));
 };
 
+var updateGroupCache = function(groupId,groupFlag,className,memberList){
+    if(!memberList||memberList.length==0){
+        return;
+    }
+    var groups_cache = JSON.parse(window.localStorage.getItem("groups_cache")||'{}');
+
+    if(Array.isArray(memberList)){
+        var groupObj = groups_cache[groupId];
+        if(!groupObj){
+            groupObj = {
+                id:groupId,
+                groupName:className+'('+(groupFlag==0?'同课同班':'同课')+')',
+                groupMembers:[]
+            };
+        }
+        for(var index in memberList){
+            groupObj.groupMembers.push(memberList[index].studentId);
+        }
+        groupObj.groupMembers = unique(groupObj.groupMembers);
+        groups_cache[groupId] = groupObj;
+    }
+
+    window.localStorage.setItem('groups_cache',JSON.stringify(groups_cache));
+};
+
+var getGroupCache = function(groupId){
+    var groups_cache = JSON.parse(window.localStorage.getItem("groups_cache")||'{}');
+    if(groups_cache[groupId]){
+        return groups_cache[groupId];
+    }
+}
+
 var getUserCache = function(){
-    return JSON.parse(window.localStorage.getItem('users_cache'));
+    return JSON.parse(window.localStorage.getItem('users_cache')||'{}');
+};
+
+var unique = function (arr) {
+    var a = [],
+        o = {},
+        i,
+        v,
+        len = arr.length;
+    if (len < 2) {
+        return arr;
+    }
+    for (i = 0; i < len; i++) {
+        v = arr[i];
+        if (o[v] !== 1) {
+            a.push(v);
+            o[v] = 1;
+        }
+    }
+    return a;
+};
+
+/**
+ * add message to chat panel
+ * @param message obj
+ */
+var addMessageToChatPanel = function(message){
+    if(message.messageSource==getItemFromStorage('studentId')){
+        $("#chat-page #chat-panel").append('\
+            <div class="row me-chat"><!-- 一个聊天记录 -->\
+                <div class="col-xs-8 col-xs-offset-2 right chat-content">\
+                <span class="text-muted lead name">我</span><br>\
+                <div class="well well-sm">\
+                    <span class="lead text-info content">'+message.messageContent+'</span>\
+                </div>\
+                </div>\
+            <div class="col-xs-1 chat-header">\
+                <br>\
+                    <img class="avatar" src="res/icon/avatar.jpg">\
+                    </div>\
+                </div>\
+            ');
+    }else{
+        var student = getUserCache()[message.messageSource];
+        var studentName;
+        if(student){
+            studentName = student.username;
+        }
+        $("#chat-page #chat-panel").append('\
+            <div class="row other-chat"><!-- 一个聊天记录 -->\
+                <div class="col-xs-1 chat-header">\
+                <br>\
+                    <img class="avatar" src="res/icon/default.jpg">\
+                    </div>\
+                    <div class="col-xs-9 chat-content">\
+                        <span class="text-muted lead name">'+(studentName?studentName:message.messageSource)+'</span><br>\
+                        <div class="well well-sm">\
+                            <span class="lead content">'+message.messageContent+'</span>\
+                        </div>\
+                    </div>\
+                    </div>\
+            ');
+    }
+    updateChatPanelState();
+};
+
+var addMessageToChatCache = function(message, immediateAdd){
+    //对象存储结构应为？？imGroupFlag bindId(studentId|imGroupId) unreadNum timestamp messages(array)--(messageSource messageContent messageDate) messages的length一直维持在200
+    //更新视图，增加item，并且重排列item
+    //localStorage中一个key专门存储消息数组，收到消息后，更改位置，标记未读消息数量
+    var chat_cache = getItemFromStorage("chat_cache");
+
+    if(!Array.isArray(chat_cache)){
+        chat_cache = [];
+    }
+
+    var bindId = (message.imGroupFlag=='1')?message.imGroupId:message.messageSource;
+
+    var updateFlag = false;
+
+    $.each(chat_cache, function(index, item){
+        if(item.imGroupFlag==message.imGroupFlag){
+            if(item.bindId==bindId){
+                item.timestamp = message.messageDate;
+                if(!immediateAdd){
+                    ++item.unreadNum;
+                }
+                (item.messages=item.messages||[]).push({
+                    messageSource:message.messageSource,
+                    messageContent:message.messageContent,
+                    messageDate:message.messageDate
+                });
+                updateFlag = true;
+            }
+        }
+    });
+
+    if(!updateFlag){
+        var item = {
+            imGroupFlag:message.imGroupFlag,
+            bindId:bindId,
+            unreadNum:0,
+            timestamp:0,
+            messages:[]
+        };
+        if(!immediateAdd){
+            ++item.unreadNum;
+        }
+        item.timestamp = message.messageDate;
+        (item.messages=item.messages||[]).push({
+            messageSource:message.messageSource,
+            messageContent:message.messageContent,
+            messageDate:message.messageDate
+        });
+        chat_cache.push(item);
+    }
+
+    setItemToStorage('chat_cache',chat_cache);
+};
+
+var getChatCacheByBindId = function(bindId){
+    var chat_cache = getItemFromStorage("chat_cache");
+
+    if(!Array.isArray(chat_cache)){
+        return undefined;
+    }else{
+        var chatItem = undefined;
+        $.each(chat_cache, function(index, item){
+            if(item.bindId==bindId){
+                chatItem = item;
+                return;
+            }
+        });
+        return chatItem;
+    }
+};
+
+var updateChatCacheByItem = function(chatItem){
+    var chat_cache = getItemFromStorage("chat_cache");
+
+    if(!Array.isArray(chat_cache)){
+        return;
+    }else{
+        $.each(chat_cache, function(index, item){
+            if(item.bindId==chatItem.bindId){
+                chat_cache[index] = chatItem;
+                setItemToStorage("chat_cache",chat_cache);
+                return;
+            }
+        });
+    }
+};
+
+var updateChatPanelState = function(){
+    $("#chat-page #contents").scrollTo("#chat-panel-bottom",80);
+};
+
+var initMessageCenterView = function(){
+    var chat_cache = getItemFromStorage("chat_cache");
+    if(!chat_cache){
+        return;
+    }
+    var ulDom = $("#instant-message #message-panel").children('ul');
+    $.each(chat_cache, function(index, chatItem){
+        var user_cache = getUserCache();
+        var receiverUsername;
+        if(user_cache&&user_cache[chatItem.messages[chatItem.messages.length-1].messageSource]){
+            receiverUsername = user_cache[chatItem.messages[chatItem.messages.length-1].messageSource].username;
+        }
+        var title = (chatItem.imGroupFlag=='1')?getItemFromStorage('groups_cache')[chatItem.bindId].groupName:(user_cache[chatItem.bindId].username||chatItem.bindId);
+        ulDom.prepend('\
+        <li class="ui-li-has-count ui-li-has-thumb">\
+                    <a href="#chat-page" data-transition="slide" class="ui-btn" data-flag="'+chatItem.imGroupFlag+'" data-id="'+chatItem.bindId+'">\
+                        <img src="./res/icon/default.jpg">\
+                        <h2><span class="title text-info">'+title+'</span>&nbsp;&nbsp;<small class="time">'+formatMessageTime(chatItem.timestamp)+'</small></h2>\
+                        <p class="text-muted recentContent">'+(receiverUsername||chatItem.messages[chatItem.messages.length-1].messageSource)+':'+chatItem.messages[chatItem.messages.length-1].messageContent+'</p>\
+                    </a>\
+                    <span class="ui-li-count ui-body-b">'+(chatItem.unreadNum||0)+'</span>\
+                </li>\
+        ');
+    });
+}
+
+//消息来时调用的第三个方法
+var updateMessageCenterViewByBindId = function(bindId){
+    var ulDom = $("#instant-message #message-panel").children('ul');
+    var liDomList = ulDom.children('li');
+
+    var insertFlag = true;
+    var chatItem = getChatCacheByBindId(bindId);
+    if(!chatItem){
+        console.log("do not expect to be here!");
+        return;
+    }
+
+    var user_cache = getUserCache();
+    var receiverUsername;
+    if(user_cache&&user_cache[chatItem.messages[chatItem.messages.length-1].messageSource]){
+        receiverUsername = user_cache[chatItem.messages[chatItem.messages.length-1].messageSource].username;
+    }
+
+    if(liDomList&&liDomList.length>0){
+        //查询，不在再插
+        $.each(liDomList, function(index, item){
+            var aDom = $(item).children('a');
+            if(aDom.attr('data-id')==bindId){
+                aDom.next('.ui-li-count').text(chatItem.unreadNum||0);
+                aDom.contents().find('.time').text(formatMessageTime(chatItem.timestamp));
+                aDom.children('.recentContent').text((receiverUsername||chatItem.messages[chatItem.messages.length-1].messageSource)+':'+chatItem.messages[chatItem.messages.length-1].messageContent);
+                insertFlag = false;
+                ulDom.prepend($(item));
+                return;
+            }
+        });
+    }
+
+    if(insertFlag){
+
+        //获取title，经常更新
+        var title = (chatItem.imGroupFlag=='1')?getItemFromStorage('groups_cache')[chatItem.bindId].groupName:(user_cache[chatItem.bindId].username||chatItem.bindId);
+        ulDom.prepend('\
+        <li class="ui-li-has-count ui-li-has-thumb">\
+                    <a href="#chat-page" data-transition="slide" class="ui-btn" data-flag="'+chatItem.imGroupFlag+'" data-id="'+chatItem.bindId+'">\
+                        <img src="./res/icon/default.jpg">\
+                        <h2><span class="title text-info">'+title+'</span>&nbsp;&nbsp;<small class="time">'+formatMessageTime(chatItem.timestamp)+'</small></h2>\
+                        <p class="text-muted recentContent">'+(receiverUsername||chatItem.messages[chatItem.messages.length-1].messageSource)+':'+chatItem.messages[chatItem.messages.length-1].messageContent+'</p>\
+                    </a>\
+                    <span class="ui-li-count ui-body-b">'+(chatItem.unreadNum||0)+'</span>\
+                </li>\
+        ');
+    }
+
+}
+
+var onReceiveMessage = function(message){
+    //更新存储对象  messageSource,imGroupFlag,imGroupId,messageContent,messageDate
+    //对象存储结构应为？？imGroupFlag studentId|imGroupId unreadNum timestamp messages(array)--(messageSource messageContent messageDate) messages的length一直维持在200
+    //更新视图，增加item，并且重排列item
+    //localStorage中一个key专门存储消息数组，收到消息后，更改位置，标记未读消息数量
 };

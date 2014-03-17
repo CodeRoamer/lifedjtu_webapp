@@ -1,0 +1,196 @@
+#contain{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+#content{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+#content_show{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 55px;
+    right: 0;
+}
+#content_saying{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 55px;
+    right: 0;
+}
+#users_online{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 200px;
+}
+#toolbar{
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 5px;
+    background: #aaa;
+    background: rgba(0,0,0,0.2);
+}
+
+#user_label{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height:30px;
+    border-top-left-radius: 5px;
+    background: #aaa;
+    background: rgba(0,0,0,0.4);
+    text-align: center;
+    line-height: 30px;
+    font-weight: bold;
+    color: #eee;
+}
+#users_list{
+    position: absolute;
+    top: 30px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-bottom-left-radius: 5px;
+    padding: 10px 0 10px 10px;
+}
+#users_list ul{
+    width:100%;
+    height:100%;
+    list-style: none;
+    overflow-x:hidden;
+    overflow-y:scroll;
+}
+#users_list ul li{
+    width: 155px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    height: 25px;
+    line-height: 25px;
+    padding: 0 5px;
+    cursor: pointer;
+    border-bottom: 1px dashed #666;
+}
+#users_list ul li:hover{
+    background: #eee;
+    background:  rgba(0,0,0,0.2);
+    border-radius: 5px;
+}
+
+#contents{
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    background: #eee;
+    background: rgba(0,0,0,0.1);
+    border-radius: 5px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 10px;
+}
+#input_content{
+    position: absolute;
+    top: 10px;
+    left: 5px;
+    right: 105px;
+    bottom: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+
+    outline: none;
+    padding: 10px;
+    white-space: pre-wrap;
+    overflow-x:hidden;
+    overflow-y:auto;
+    background: #eee;
+    background: rgba(0,0,0,0.1);
+}
+
+#from
+{
+    color:#F90;
+    font-weight:bold;
+}
+#to{
+    color:#39F;
+    font-weight:bold
+}
+#say{
+    position: absolute;
+    top: 10px;
+    right: 5px;
+    bottom: 5px;
+    width: 100px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    line-height: 45px;
+    font-size: 16px;
+    font-weight: bolder;
+    font-family: "幼圆","微软雅黑","黑体","宋体";
+    color: #eee;
+    background: #666;
+    background: rgba(0,0,0,0.5);
+}
+
+.other-chat{
+    margin-left: -15px;
+}
+
+.other-chat .chat-header{
+    padding-right: 25px;
+
+}
+
+.other-chat .chat-header .avatar{
+    width: 32px;
+    height: 32px;
+}
+
+.other-chat .chat-content .name{
+    font-size: 12px;
+}
+
+.other-chat .chat-content .content{
+    font-size: 15px;
+}
+
+.me-chat {
+    margin-right: -18%;
+}
+
+.me-chat .chat-header{
+    padding-left: 0px;
+    margin-left: -7px;
+}
+
+.me-chat .chat-header .avatar{
+    width: 32px;
+    height: 32px;
+}
+
+.me-chat .chat-content .name{
+    padding-left: 94%;
+    position: relative;
+    font-size: 12px;
+}
+
+.me-chat .chat-content .content{
+    font-size: 15px;
+}

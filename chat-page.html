@@ -3,12 +3,14 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>LifeDjtu--人在交大</title>
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" href="res/css/bootstrap.css">
     <link rel="stylesheet" href="res/css/bootstrap-theme.css">
     <link rel="stylesheet"  href="res/css/jquery.mobile-1.4.1.css">
+    <link rel="stylesheet" href="res/css/app.css">
+    <link rel="stylesheet" href="res/css/chat.css">
     <script src="res/js/jquery.js"></script>
     <script src="res/js/jquery.mobile-1.4.1.js"></script>
     <script src="res/js/bootstrap.js"></script>
@@ -17,14 +19,13 @@
     <script src="app/util.js"></script>
 
 </head>
-
 <body>
 
-<div data-role="page" id="multichat-page" data-url="multichat-page">
-    <div data-role="header" data-theme="a" data-position="fixed">
+<div data-role="page" id="chat-page" data-url="chat-page">
+    <div data-fullscreen="true" data-role="header" data-theme="a" data-position="fixed">
         <h1>
             <br>
-            <span class="lead"><span class="group-name">同级</span>:<span class="course-name">英国文学</span></span>
+            <span class="lead"><span class="title">大学生就业与指导理论(同课同班)</span></span>
         </h1>
         <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
             <br>
@@ -34,124 +35,130 @@
             <br>
             <a href="#classMateList" data-bind="" data-id="" data-transition="slide" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-grid ui-btn-icon-left ui-alt-icon ui-nodisc-icon">群组</a>
         </div>
-
     </div><!-- end of header -->
+    <div id="contain">
+        <div id="content">
+            <div id="content_show">
+                <div id="contents">
+                    <br>
+                    <br>
+                    <br>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12 col-xs-12">
+                                <!-- 全部的聊天场所 -->
+                                <div class="row other-chat"><!-- 一个聊天记录 -->
+                                    <div class="col-xs-1 chat-header">
+                                        <br>
+                                        <img class="avatar" src="res/icon/default.jpg">
+                                    </div>
+                                    <div class="col-xs-9 chat-content">
+                                        <span class="text-muted lead name">程诗琪</span><br>
+                                        <div class="well well-sm">
+                                            <span class="lead content">学校近期将会抽查寝室卫生，上课秩序（迟到、缺课等）请各班同学认真遵守纪律。</span>
+                                        </div>
+                                    </div>
+                                </div>
 
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12 col-xs-12">
-                <!-- 全部的聊天场所 -->
-                <div class="row"><!-- 一个聊天记录 -->
-                    <div class="col-xs-1" style="padding-right: 25px">
-                        <br>
-                        <img src="res/icon/default.jpg" style="width: 32px;height: 32px">
-                    </div>
-                    <div class="col-xs-9">
-                        <span class="text-muted lead" style="font-size: 12px">程诗琪</span><br>
-                        <div class="well well-sm">
-                            <span class="lead" style="font-size: 15px">学校近期将会抽查寝室卫生，上课秩序（迟到、缺课等）请各班同学认真遵守纪律。</span>
+                                <div class="row me-chat"><!-- 一个聊天记录 -->
+                                    <div class="col-xs-8 col-xs-offset-2 right chat-content">
+                                        <span class="text-muted lead name">我</span><br>
+                                        <div class="well well-sm">
+                                            <span class="lead text-info content">学校近期将会抽查寝室卫生，上课秩序（迟到、缺课等）请各班同学认真遵守纪律。</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-1 chat-header">
+                                        <br>
+                                        <img class="avatar" src="res/icon/avatar.jpg">
+                                    </div>
+                                </div>
+
+                                <div class="row me-chat"><!-- 一个聊天记录 -->
+                                    <div class="col-xs-8 col-xs-offset-2 right chat-content">
+                                        <span class="text-muted lead name">我</span><br>
+                                        <div class="well well-sm">
+                                            <span class="lead text-info content">嘿嘿。</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-1 chat-header">
+                                        <br>
+                                        <img class="avatar" src="res/icon/avatar.jpg">
+                                    </div>
+                                </div>
+
+                                <div class="row other-chat"><!-- 一个聊天记录 -->
+                                    <div class="col-xs-1 chat-header">
+                                        <br>
+                                        <img class="avatar" src="res/icon/default.jpg">
+                                    </div>
+                                    <div class="col-xs-9 chat-content">
+                                        <span class="text-muted lead name">程诗琪</span><br>
+                                        <div class="well well-sm">
+                                            <span class="lead content">学校近期将会抽查寝室卫生，上课秩序（迟到、缺课等）请各班同学认真遵守纪律。</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row other-chat"><!-- 一个聊天记录 -->
+                                    <div class="col-xs-1 chat-header">
+                                        <br>
+                                        <img class="avatar" src="res/icon/default.jpg">
+                                    </div>
+                                    <div class="col-xs-9 chat-content">
+                                        <span class="text-muted lead name">程诗琪</span><br>
+                                        <div class="well well-sm">
+                                            <span class="lead content">学校近期将会抽查寝室卫生，上课秩序（迟到、缺课等）请各班同学认真遵守纪律。</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row other-chat"><!-- 一个聊天记录 -->
+                                    <div class="col-xs-1 chat-header">
+                                        <br>
+                                        <img class="avatar" src="res/icon/default.jpg">
+                                    </div>
+                                    <div class="col-xs-9 chat-content">
+                                        <span class="text-muted lead name">程诗琪</span><br>
+                                        <div class="well well-sm">
+                                            <span class="lead content">学校近期将会抽查寝室卫生，上课秩序（迟到、缺课等）请各班同学认真遵守纪律。</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row other-chat"><!-- 一个聊天记录 -->
+                                    <div class="col-xs-1 chat-header">
+                                        <br>
+                                        <img class="avatar" src="res/icon/default.jpg">
+                                    </div>
+                                    <div class="col-xs-9 chat-content">
+                                        <span class="text-muted lead name">程诗琪</span><br>
+                                        <div class="well well-sm">
+                                            <span class="lead content">学校近期将会抽查寝室卫生，上课秩序（迟到、缺课等）请各班同学认真遵守纪律。</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
                         </div>
-                    </div>
+
+                    </div><!-- /content -->
                 </div>
-
-                <div class="row"><!-- 一个聊天记录 -->
-                    <div class="col-xs-8 col-xs-offset-2 right">
-                        <span class="text-muted lead" style="font-size: 12px">我</span><br>
-                        <div class="well well-sm">
-                            <span class="lead text-info" style="font-size: 15px">学校近期将会抽查寝室卫生，上课秩序（迟到、缺课等）请各班同学认真遵守纪律。</span>
-                        </div>
-                    </div>
-                    <div class="col-xs-1" style="padding-left: 0px">
-                        <br>
-                        <img src="res/icon/avatar.jpg" style="width: 32px;height: 32px">
-                    </div>
-                </div>
-
-                <!-- 全部的聊天场所 -->
-                <div class="row"><!-- 一个聊天记录 -->
-                    <div class="col-xs-1" style="padding-right: 25px">
-                        <br>
-                        <img src="res/icon/default.jpg" style="width: 32px;height: 32px">
-                    </div>
-                    <div class="col-xs-9">
-                        <span class="text-muted lead" style="font-size: 12px">程诗琪</span><br>
-                        <div class="well well-sm">
-                            <span class="lead" style="font-size: 15px">学校近期将会抽查寝室卫生，上课秩序（迟到、缺课等）请各班同学认真遵守纪律。</span>
-                        </div>
-                    </div>
-                </div>
-
-
-                <!-- 全部的聊天场所 -->
-                <div class="row"><!-- 一个聊天记录 -->
-                    <div class="col-xs-1" style="padding-right: 25px">
-                        <br>
-                        <img src="res/icon/default.jpg" style="width: 32px;height: 32px">
-                    </div>
-                    <div class="col-xs-9">
-                        <span class="text-muted lead" style="font-size: 12px">程诗琪</span><br>
-                        <div class="well well-sm">
-                            <span class="lead" style="font-size: 15px">学校近期将会抽查寝室卫生，上课秩序（迟到、缺课等）请各班同学认真遵守纪律。</span>
-                        </div>
-                    </div>
-                </div>
-
-
-                <!-- 全部的聊天场所 -->
-                <div class="row"><!-- 一个聊天记录 -->
-                    <div class="col-xs-1" style="padding-right: 25px">
-                        <br>
-                        <img src="res/icon/default.jpg" style="width: 32px;height: 32px">
-                    </div>
-                    <div class="col-xs-9">
-                        <span class="text-muted lead" style="font-size: 12px">程诗琪</span><br>
-                        <div class="well well-sm">
-                            <span class="lead" style="font-size: 15px">学校近期将会抽查寝室卫生，上课秩序（迟到、缺课等）请各班同学认真遵守纪律。</span>
-                        </div>
-                    </div>
-                </div>
-
-
-                <!-- 全部的聊天场所 -->
-                <div class="row"><!-- 一个聊天记录 -->
-                    <div class="col-xs-1" style="padding-right: 25px">
-                        <br>
-                        <img src="res/icon/default.jpg" style="width: 32px;height: 32px">
-                    </div>
-                    <div class="col-xs-9">
-                        <span class="text-muted lead" style="font-size: 12px">程诗琪</span><br>
-                        <div class="well well-sm">
-                            <span class="lead" style="font-size: 15px">学校近期将会抽查寝室卫生，上课秩序（迟到、缺课等）请各班同学认真遵守纪律。</span>
-                        </div>
-                    </div>
-                </div>
-
-
-
             </div>
-        </div>
-
-    </div><!-- /content -->
-
-    <div data-role="footer" data-position="fixed">
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-9">
-                    <textarea class="form-control" rows="3"></textarea>
-
+            <div id="content_saying">
+                <div id="toolbar"></div>
+                <div id="input_content" contenteditable="true"></div>
+                <div id="say">
+                    发送
                 </div>
-                <div class="col-xs-3" style="padding-left: 0px">
-                    <button type="button" class="btn btn-default">发送</button>
-                </div>
+                <!-- messageSource,messageDes, imGroupFlag,imGroupId,messageContent,messageDate -->
+                <input type="hidden" name="messageSource" value="">
+                <input type="hidden" name="messageDes" value="">
+                <input type="hidden" name="imGroupFlag" value="">
+                <input type="hidden" name="imGroupId" value="">
             </div>
         </div>
     </div>
-
 </div>
 
-
-
-
 </body>
-
 </html>

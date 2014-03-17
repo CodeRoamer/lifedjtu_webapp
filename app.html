@@ -10,14 +10,17 @@
     <link rel="stylesheet" href="res/css/bootstrap-theme.css">
     <link rel="stylesheet"  href="res/css/jquery.mobile-1.4.1.css">
     <link rel="stylesheet" href="res/css/app.css">
+    <link rel="stylesheet" href="res/css/chat.css">
     <script src="res/js/jquery.js"></script>
     <script src="res/js/jquery.mobile-1.4.1.js"></script>
+    <script src="res/js/jquery.scrollto.js"></script>
     <script src="res/js/bootstrap.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
 
     <script src="app/util.js"></script>
     <script src="app/app.js"></script>
     <script src="app/score.js"></script>
+    <script src="app/message.js"></script>
 </head>
 
 <body>
@@ -32,7 +35,7 @@
         <a href="#score-table"  data-transition="pop" data-ajax="true" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-check">我的成绩</a>
         <br>
         <a href="user.html" data-ajax="false" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-user">我的资料</a>
-        <a data-ajax="false" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-mail">我的消息</a>
+        <a href="#instant-message" data-transition="flip" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-mail">我的消息</a>
         <a data-transition="pop" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-gear">设置</a>
         <br>
         <a href="index.html" id="exit-button" data-ajax="false" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-power" data-theme="b">退出登陆</a>
@@ -907,9 +910,131 @@
 
     </div>
 
+    <!-- from here, it is a big page!! dedicate to chat -->
+    <div data-role="page" id="instant-message" data-url="instant-message">
+        <div data-role="header" data-theme="a" data-position="fixed">
+            <h1>
+                <br>
+                <span class="lead">消息中心</span>
+            </h1>
+            <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
+                <br>
+                <a href="../" data-rel="back"  class="ui-btn ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-carat-l ui-btn-icon-left ui-alt-icon ui-nodisc-icon">返回</a>
+            </div>
+            <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
+                <br>
+                <a href="#refresh-mate-list" data-role="refresh-button"  data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-refresh ui-btn-icon-left ui-alt-icon ui-nodisc-icon">重连</a>
+            </div>
 
+        </div><!-- /header -->
 
+        <div role="main" id="message-panel" class="ui-content">
+            <form class="ui-filterable">
+                <input id="message-filter-input" data-type="search">
+            </form>
+            <ul data-role="listview" data-inset="false" data-count-theme="b" data-filter="true" data-input="#message-filter-input">
 
+            </ul>
+        </div><!-- /message panel end -->
+
+        <div style="display: none" role="main" id="friend-panel" class="ui-content">
+            <form class="ui-filterable">
+                <input id="friend-filter-input" data-type="search">
+            </form>
+            <ul data-role="listview" data-inset="false" data-split-theme="a" data-split-icon="user" data-filter="true" data-input="#friend-filter-input">
+                <li><a href="#">
+                    <img src="./res/icon/default.jpg">
+                    <h2><span class="student-name">李正光</span></h2>
+                    <p class="text-muted"><span class="status">[在线]</span><span class="attitude">开心的事儿真多</span></p></a>
+                    <a href="#classMateList" data-bind="1" data-id="" data-transition="pop">查看成员</a>
+                </li>
+                <li><a href="#">
+                    <img src="./res/icon/default.jpg">
+                    <h2><span class="student-name">李正光</span></h2>
+                    <p class="text-muted"><span class="status">[在线]</span><span class="attitude">开心的事儿真多</span></p></a>
+                    <a href="#classMateList" data-bind="1" data-id="" data-transition="pop">查看成员</a>
+                </li>
+                <li><a href="#">
+                    <img src="./res/icon/default.jpg">
+                    <h2><span class="student-name">李正光</span></h2>
+                    <p class="text-muted"><span class="status">[在线]</span><span class="attitude">开心的事儿真多</span></p></a>
+                    <a href="#classMateList" data-bind="1" data-id="" data-transition="pop">查看成员</a>
+                </li>
+            </ul>
+        </div><!-- /message panel end -->
+
+        <div style="display: none" role="main" id="group-panel" class="ui-content">
+            <form class="ui-filterable">
+                <input id="group-filter-input" data-type="search">
+            </form>
+            <ul data-role="listview" data-inset="false" data-split-icon="grid" data-split-theme="a" data-filter="true" data-input="#group-filter-input">
+
+            </ul>
+        </div><!-- /message panel end -->
+
+        <div data-role="footer" data-position="fixed" data-transition="slide">
+            <div data-role="navbar" data-role="footer" data-position="fixed" data-transition="slide">
+                <ul id="footer-list">
+                    <li><a href="#message-panel" data-icon="comment" class="ui-btn-active">消息</a></li>
+                    <li><a href="#friend-panel" data-icon="user" class="">好友</a></li>
+                    <li><a href="#group-panel" data-icon="grid" class="">群组</a></li>
+                </ul>
+            </div><!-- /navbar -->
+        </div>
+    </div>
+
+    <div data-role="page" id="chat-page" data-url="chat-page">
+        <div data-fullscreen="true" data-role="header" data-theme="a" data-position="fixed">
+            <h1>
+                <br>
+                <span class="lead"><span class="title"></span></span>
+            </h1>
+            <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
+                <br>
+                <a href="../" data-rel="back"  class="ui-btn ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-carat-l ui-btn-icon-left ui-alt-icon ui-nodisc-icon">返回</a>
+            </div>
+            <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
+                <br>
+                <a href="#classMateList" data-bind="" data-id="" data-transition="slide" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-grid ui-btn-icon-left ui-alt-icon ui-nodisc-icon">群组</a>
+            </div>
+        </div><!-- end of header -->
+        <div id="contain">
+            <div id="content">
+                <div id="content_show">
+                    <div id="contents">
+                        <br>
+                        <br>
+                        <br>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-12 col-xs-12" id="chat-panel">
+                                    <!-- 全部的聊天场所 -->
+
+                                </div>
+                            </div>
+
+                        </div><!-- /content -->
+                        <div id="chat-panel-bottom"></div>
+                    </div>
+                </div>
+                <div id="content_saying">
+                    <div id="toolbar"></div>
+                    <div id="input_content" contenteditable="true"></div>
+                    <div id="say">
+                        发送
+                    </div>
+                    <!-- messageSource,messageDes, imGroupFlag,imGroupId,messageContent,messageDate -->
+                    <input type="hidden" name="messageSource" value="">
+                    <input type="hidden" name="messageDes" value="">
+                    <input type="hidden" name="imGroupFlag" value="">
+                    <input type="hidden" name="imGroupId" value="">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="http://localhost:1222/socket.io/socket.io.js"></script>
+    <script src="app/socket-app.js"></script>
 
 </body>
 

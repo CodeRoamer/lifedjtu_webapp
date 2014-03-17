@@ -86,7 +86,7 @@ $(function() {
 
 
     //启动时间扫描
-    setInterval(updateDjtuDate,60000);
+    setInterval(updateDjtuDate,300000);
 
 
     initCourseTable(updateDjtuDate);
@@ -273,7 +273,7 @@ $(function() {
 
         $("#classMateList .course-name").text(courseName);
 
-        ensureRenderClassMatesList(false,parseInt(groupFlag),bindId);
+        ensureRenderClassMatesList(false,parseInt(groupFlag),bindId,courseName);
     });
     //classDetail页面的刷新按钮
     $("#classDetail a[href='#refresh-course-info']").click(function(event){
@@ -285,9 +285,10 @@ $(function() {
     $(document).on('click', "#classMateList a[href='#more-class-mates']",function(event){
         var bindId = $(this).attr("data-id");
         var groupFlag = $(this).attr("data-bind");
+        var courseName = $("#classMateList .course-name").text();
         var me = this;
 
-        ensureRenderClassMatesList(true,parseInt(groupFlag),bindId,undefined,function(){
+        ensureRenderClassMatesList(true,parseInt(groupFlag),bindId,courseName,undefined,function(){
             $(me).fadeOut(150);
         });
     });
@@ -295,8 +296,9 @@ $(function() {
     $("#classMateList a[href='#refresh-mate-list']").click(function(event){
         var groupFlag = $(this).attr("data-bind");
         var bindId = $(this).attr("data-id");
+        var courseName = $("#classMateList .course-name").text();
 
-        ensureRenderClassMatesList(true,parseInt(groupFlag),bindId,0);
+        ensureRenderClassMatesList(true,parseInt(groupFlag),bindId,courseName,0);
     });
 
 

@@ -1,55 +1,162 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE HTML>
+<html manifest="" lang="en-US">
+
 <head>
-    <title></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LifeDjtu--人在交大</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="res/css/bootstrap.css">
+    <link rel="stylesheet" href="res/css/bootstrap-theme.css">
+    <link rel="stylesheet"  href="res/css/jquery.mobile-1.4.1.css">
+    <link rel="stylesheet" href="res/css/app.css">
+    <link rel="stylesheet" href="res/css/chat.css">
+    <script src="res/js/jquery.js"></script>
+    <script src="res/js/jquery.mobile-1.4.1.js"></script>
+    <script src="res/js/bootstrap.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+
+    <script src="app/util.js"></script>
+    <script src="app/news.js"></script>
+
 </head>
 <body>
 
-<li data-inset="false" data-iconpos="right" data-role="collapsible" class="story-item ui-collapsible ui-collapsible-themed-content ui-collapsible-collapsed ui-li-static ui-body-inherit ui-first-child">
-    <h2 class="ui-collapsible-heading ui-collapsible-heading-collapsed">
-        <a class="ui-collapsible-heading-toggle ui-btn ui-icon-plus ui-btn-icon-right ui-btn-inherit" href="#">
-            J5
-            <span class="ui-collapsible-heading-status"> click to expand contents</span>
-        </a>
-    </h2>
-    <div class="ui-collapsible-content ui-body-inherit ui-collapsible-content-collapsed" aria-hidden="true">
+<div data-role="page" id="multichat-page" data-url="multichat-page">
+    <div data-fullscreen="true" data-role="header" data-theme="a" data-position="fixed">
+        <h1>
+            <br>
+            <span class="lead"><span class="group-name">大学生就业与指导理论(同课同班)</span></span>
+        </h1>
+        <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
+            <br>
+            <a href="../" data-rel="back"  class="ui-btn ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-carat-l ui-btn-icon-left ui-alt-icon ui-nodisc-icon">返回</a>
+        </div>
+        <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
+            <br>
+            <a href="#classMateList" data-bind="" data-id="" data-transition="slide" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-grid ui-btn-icon-left ui-alt-icon ui-nodisc-icon">群组</a>
+        </div>
+    </div><!-- end of header -->
+    <div id="contain">
+        <div id="content">
+            <div id="content_show">
+                <div id="contents">
+                    <br>
+                    <br>
+                    <br>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12 col-xs-12">
+                                <!-- 全部的聊天场所 -->
+                                <div class="row other-chat"><!-- 一个聊天记录 -->
+                                    <div class="col-xs-1 chat-header">
+                                        <br>
+                                        <img class="avatar" src="res/icon/default.jpg">
+                                    </div>
+                                    <div class="col-xs-9 chat-content">
+                                        <span class="text-muted lead name">程诗琪</span><br>
+                                        <div class="well well-sm">
+                                            <span class="lead content">学校近期将会抽查寝室卫生，上课秩序（迟到、缺课等）请各班同学认真遵守纪律。</span>
+                                        </div>
+                                    </div>
+                                </div>
 
-        <ul data-role="listview" data-theme="b" class="room-list ui-listview ui-group-theme-b">
-            <li data-inset="false" data-iconpos="right" data-role="collapsible" class="room-item ui-collapsible ui-collapsible-themed-content ui-collapsible-collapsed ui-li-static ui-body-inherit ui-first-child ui-last-child">
-                <h2 class="ui-collapsible-heading ui-collapsible-heading-collapsed">
-                    <a class="ui-collapsible-heading-toggle ui-btn ui-icon-plus ui-btn-icon-right ui-btn-inherit" href="#">
-                        J502
-                        <span class="ui-collapsible-heading-status"> click to expand contents</span>
-                    </a>
-                </h2>
-                <div class="ui-collapsible-content ui-body-inherit ui-collapsible-content-collapsed" aria-hidden="true">
+                                <div class="row me-chat"><!-- 一个聊天记录 -->
+                                    <div class="col-xs-8 col-xs-offset-2 right chat-content">
+                                        <span class="text-muted lead name">我</span><br>
+                                        <div class="well well-sm">
+                                            <span class="lead text-info content">学校近期将会抽查寝室卫生，上课秩序（迟到、缺课等）请各班同学认真遵守纪律。</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-1 chat-header">
+                                        <br>
+                                        <img class="avatar" src="res/icon/avatar.jpg">
+                                    </div>
+                                </div>
 
-                    <table class="table">
-                        <tbody>
-                        <tr><td>教室类型</td>
-                            <td>普通教室</td>
-                        </tr></tbody>
-                        <tbody>
-                        <tr><td>座位类型</td>
-                            <td>固定桌椅</td>
-                        </tr></tbody>
-                        <tbody>
-                        <tr><td>座位数目</td>
-                            <td>80</td>
-                        </tr></tbody>
-                        <tbody>
-                        <tr><td>考试容量</td>
-                            <td>32</td>
-                        </tr></tbody>
-                        <tbody>
-                        <tr><td>课程容量</td>
-                            <td>80</td>
-                        </tr></tbody>
-                    </table>
+                                <div class="row me-chat"><!-- 一个聊天记录 -->
+                                    <div class="col-xs-8 col-xs-offset-2 right chat-content">
+                                        <span class="text-muted lead name">我</span><br>
+                                        <div class="well well-sm">
+                                            <span class="lead text-info content">嘿嘿。</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-1 chat-header">
+                                        <br>
+                                        <img class="avatar" src="res/icon/avatar.jpg">
+                                    </div>
+                                </div>
+
+                                <div class="row other-chat"><!-- 一个聊天记录 -->
+                                    <div class="col-xs-1 chat-header">
+                                        <br>
+                                        <img class="avatar" src="res/icon/default.jpg">
+                                    </div>
+                                    <div class="col-xs-9 chat-content">
+                                        <span class="text-muted lead name">程诗琪</span><br>
+                                        <div class="well well-sm">
+                                            <span class="lead content">学校近期将会抽查寝室卫生，上课秩序（迟到、缺课等）请各班同学认真遵守纪律。</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row other-chat"><!-- 一个聊天记录 -->
+                                    <div class="col-xs-1 chat-header">
+                                        <br>
+                                        <img class="avatar" src="res/icon/default.jpg">
+                                    </div>
+                                    <div class="col-xs-9 chat-content">
+                                        <span class="text-muted lead name">程诗琪</span><br>
+                                        <div class="well well-sm">
+                                            <span class="lead content">学校近期将会抽查寝室卫生，上课秩序（迟到、缺课等）请各班同学认真遵守纪律。</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row other-chat"><!-- 一个聊天记录 -->
+                                    <div class="col-xs-1 chat-header">
+                                        <br>
+                                        <img class="avatar" src="res/icon/default.jpg">
+                                    </div>
+                                    <div class="col-xs-9 chat-content">
+                                        <span class="text-muted lead name">程诗琪</span><br>
+                                        <div class="well well-sm">
+                                            <span class="lead content">学校近期将会抽查寝室卫生，上课秩序（迟到、缺课等）请各班同学认真遵守纪律。</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row other-chat"><!-- 一个聊天记录 -->
+                                    <div class="col-xs-1 chat-header">
+                                        <br>
+                                        <img class="avatar" src="res/icon/default.jpg">
+                                    </div>
+                                    <div class="col-xs-9 chat-content">
+                                        <span class="text-muted lead name">程诗琪</span><br>
+                                        <div class="well well-sm">
+                                            <span class="lead content">学校近期将会抽查寝室卫生，上课秩序（迟到、缺课等）请各班同学认真遵守纪律。</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+
+                    </div><!-- /content -->
                 </div>
-            </li>
-        </ul>
+            </div>
+            <div id="content_saying">
+                <div id="toolbar"></div>
+                <div id="input_content" contenteditable="true"></div>
+                <div id="say">
+                    发送
+                </div>
+            </div>
+        </div>
     </div>
-</li>
+</div>
+
 </body>
 </html>
