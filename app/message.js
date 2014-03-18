@@ -37,10 +37,8 @@ $(function(){
         });
     }
 
-    //加载同学列表，此事件触发属于classDetail页面
+    //加载同学列表，此事件触发属于group panel页面
     $(document).on("click", "#group-panel a[href='#classMateList']", function(event){
-        console.log("here in list!");
-
         var bindId = $(this).attr('data-id');
         var groupFlag = $(this).attr("data-bind");
         var courseName = $(this).prev('a').contents().find(".title").text();
@@ -54,6 +52,25 @@ $(function(){
 
         ensureRenderClassMatesList(false,parseInt(groupFlag),bindId,courseName);
     });
+
+    //加载同学列表，此事件触发属于chat page
+    $(document).on("click", "#chat-page a[href='#classMateList']", function(event){
+        console.log("here in list! chat-page click");
+
+        var bindId = $("#chat-page input[name='imGroupId']").attr('value');
+        var groupFlag = -1;
+        var courseName = $("#chat-page").contents().find(".title").text();
+
+        //刷新按钮需要这两个参数！！！
+        $("#classMateList a[href='#refresh-mate-list']").attr("data-bind",groupFlag);
+        $("#classMateList a[href='#refresh-mate-list']").attr("data-id",bindId);
+
+
+        $("#classMateList .course-name").text(courseName);
+
+        ensureRenderClassMatesList(false,parseInt(groupFlag),bindId,courseName);
+    });
+
 
     //进入聊天界面前的准备工作
     $(document).on("click", "#instant-message a[href='#chat-page']", function(event){
@@ -88,7 +105,7 @@ $(function(){
         }
 
 
-        setTimeout(updateChatPanelState,50);
+        setTimeout(updateChatPanelState,2);
 
     });
 
@@ -107,7 +124,15 @@ $(function(){
 
         setTimeout(function(){
             updateChatPanelState();
-        },200);
+        },50);
+    });
+
+    $("#chat-page #input_content").keypress(function(event){
+        event.stopPropagation();
+
+        if(event.which==13){
+            $("#chat-page #say").click();
+        }
     });
 
     //发消息

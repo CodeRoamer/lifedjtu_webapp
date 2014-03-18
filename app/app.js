@@ -88,8 +88,9 @@ $(function() {
     //启动时间扫描
     setInterval(updateDjtuDate,300000);
 
-
+    //初始化课程表
     initCourseTable(updateDjtuDate);
+    getMySelfInfo();
 
     //left panel function
     $("#leftpanel a[href='#course-table']").click(function(){

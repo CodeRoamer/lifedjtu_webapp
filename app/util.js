@@ -12,20 +12,56 @@
 var globalHost = "http://lifedjtu.duapp.com/";
 
 var getItemFromStorage = function(item){
-    return JSON.parse(window.localStorage.getItem(item));
+    var cache = window.localStorage.getItem(item);
+    if(!cache){
+        return undefined;
+    }
+    try{
+        var temp = JSON.parse(cache);
+        return temp;
+    }catch(err){
+        return cache;
+    }
+
 };
 
-var setItemToStorage = function(item,obj){
-    window.localStorage.setItem(item,JSON.stringify(obj));
+var setItemToStorage = function(item,obj,isPlainStr){
+    if(isPlainStr){
+        window.localStorage.setItem(item,obj);
+    }else{
+        window.localStorage.setItem(item,JSON.stringify(obj));
+    }
 };
 
 /**
- *
+ * 格式化日期，用于显示在消息面板中
  * @param time(Number)
+ * @param isDetail(Bool)
  */
-var formatMessageTime = function(time){
+var formatMessageTime = function(time,isDetail){
+    //console.log(time);
+
     var date = new Date();
-    date.setTime(parseInt(time));
+    if($.isNumeric(time)){
+        date.setTime(parseInt(time));
+    }else{
+        var regex = /([0-9]+)-([0-9]+)-([0-9]+)[^0-9]+([0-9]+):([0-9]+):([0-9]+)/;
+        var m = time.match(regex);
+        //console.log(m);
+        try{
+            date.setFullYear(parseInt(m[1]));
+            date.setMonth(parseInt(m[2])-1);
+            date.setDate(parseInt(m[3]));
+            date.setHours(parseInt(m[4]));
+            date.setMinutes(parseInt(m[5]));
+            date.setSeconds(parseInt(m[6]));
+        }catch (err){
+            console.log("date format error!!! date:"+time);
+
+        }
+    }
+
+    //console.log(date);
 
     var now = new Date();
     now.setHours(0);
@@ -33,23 +69,29 @@ var formatMessageTime = function(time){
     now.setSeconds(0);
     now.setMilliseconds(0);
 
+    var timeStr = (date.getHours()<10?'0'+date.getHours():date.getHours())+':'+(date.getMinutes()<10?'0'+date.getMinutes():date.getMinutes());
+
     if(date.getTime()-now.getTime()<0){
         if(date.getTime()+(1000*60*60*24)-now.getTime()<0){
-            var day = date.getDay();
-            switch (day){
-                case 1:return '星期一';
-                case 2:return '星期二';
-                case 3:return '星期三';
-                case 4:return '星期四';
-                case 5:return '星期五';
-                case 6:return '星期六';
-                case 7:return '星期日';
+            var result;
+            switch (date.getDay()){
+                case 1:result = '星期一';break;
+                case 2:result = '星期二';break;
+                case 3:result = '星期三';break;
+                case 4:result = '星期四';break;
+                case 5:result = '星期五';break;
+                case 6:result = '星期六';break;
+                case 7:result = '星期日';break;
             }
+            if(isDetail){
+                result+=' '+timeStr;
+            }
+            return result;
         }else{
-            return '昨天';
+            return (isDetail?'昨天 '+timeStr:'昨天');
         }
     }else{
-        return date.getHours()+':'+date.getMinutes();
+        return timeStr;
     }
 
 };
@@ -198,6 +240,32 @@ var getDjtuDate = function(){
     },function(jqXHR, textStatus, errorThrown){
         handleError(errorThrown);
     });
+}
+
+//处理个人信息
+var getMySelfInfo = function(callback){
+
+    if(!getItemFromStorage('userInfo')){
+        getJSON("webservice/secure/getMySelfInfo.action",{
+            studentId:getItemFromStorage('studentId'),
+            dynamicPass:getItemFromStorage('privateKey')
+        },function(data,text,xhqr){
+            if(data.flag==2){
+                if(window.localStorage){
+                    setItemToStorage('userInfo',data.user);
+                    if(callback){
+                        callback(data.user);
+                    }
+                }else{
+                    handleError("do not support local storage! try to save private key in file");
+                }
+            }else{
+                handleExceptionData(data);
+            }
+        },function(jqXHR, textStatus, errorThrown){
+            handleError(errorThrown);
+        });
+    }
 }
 
 //处理课程表
@@ -1558,7 +1626,7 @@ var addMessageToChatPanel = function(message){
         $("#chat-page #chat-panel").append('\
             <div class="row me-chat"><!-- 一个聊天记录 -->\
                 <div class="col-xs-8 col-xs-offset-2 right chat-content">\
-                <span class="text-muted lead name">我</span><br>\
+                <span class="text-muted lead name">我('+formatMessageTime(message.messageDate,true)+')</span><br>\
                 <div class="well well-sm">\
                     <span class="lead text-info content">'+message.messageContent+'</span>\
                 </div>\
@@ -1582,7 +1650,7 @@ var addMessageToChatPanel = function(message){
                     <img class="avatar" src="res/icon/default.jpg">\
                     </div>\
                     <div class="col-xs-9 chat-content">\
-                        <span class="text-muted lead name">'+(studentName?studentName:message.messageSource)+'</span><br>\
+                        <span class="text-muted lead name">'+(studentName?studentName:message.messageSource)+'('+formatMessageTime(message.messageDate,true)+')</span><br>\
                         <div class="well well-sm">\
                             <span class="lead content">'+message.messageContent+'</span>\
                         </div>\
