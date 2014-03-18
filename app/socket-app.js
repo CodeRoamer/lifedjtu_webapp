@@ -10,6 +10,8 @@ var initialFailure = false;
 var incaseInitialError = setInterval(function(){
     if(initialFailure){
         mm("socket-io-src","http://111.206.45.12:30083/socket.io/socket.io.js");
+        //mm("socket-io-src","http://127.0.0.1:1222/socket.io/socket.io.js");
+
         //console.log("here!!!for get script");
     }else{
         //console.log("here!!!for clean");
@@ -119,6 +121,7 @@ function connect(){
         var connectionAttempts = 0;
         //stopLoad();
         //triggerLoad('正在连接通信服务器');
+
 //        socket = io.connect('http://127.0.0.1:1222',{
 //            "max reconnection attempts":connectionAttempts,
 //            "sync disconnect on unload":true,
@@ -133,7 +136,6 @@ function connect(){
 
         });
 
-        //socket = io.connect('http://111.206.45.12:30083');
         //make me online
         socket.on('ready',function(){
             socket.emit('online',{
