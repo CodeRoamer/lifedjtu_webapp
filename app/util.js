@@ -8,8 +8,8 @@
 
 
 //global host
-var globalHost = "http://localhost:9119/lifedjtu/";
-//var globalHost = "http://lifedjtu.duapp.com/";
+//var globalHost = "http://localhost:9119/lifedjtu/";
+var globalHost = "http://lifedjtu.duapp.com/";
 
 var getItemFromStorage = function(item){
     return JSON.parse(window.localStorage.getItem(item));
@@ -1420,11 +1420,20 @@ var renderClassMatesList = function(memberInfo,groupFlag,bindId,pageNum){
         //console.log(memberInfo);
 
         var users_cache = getUserCache();
-
-        $.each(memberInfo,function(index, studentId){
-            //console.log(member);
+        var shouldDisplay = true;
+        //I should verify the integrity of cache!!
+        $.each(memberInfo,function(index,studentId){
             var member = users_cache[studentId];
-            ulDom.append('\
+            if(!member){
+                shouldDisplay = false;
+            }
+        });
+        //缓存是完整的，可以显示缓存列表
+        if(shouldDisplay){
+            $.each(memberInfo,function(index, studentId){
+                //console.log(member);
+                var member = users_cache[studentId];
+                ulDom.append('\
             <li class="ui-li-has-thumb">\
                 <a href="user.html" data-transition="slide" class="ui-btn ui-btn-icon-right ui-icon-carat-r">\
                     <img src="./res/icon/default.jpg">\
@@ -1433,20 +1442,26 @@ var renderClassMatesList = function(memberInfo,groupFlag,bindId,pageNum){
                 </a>\
             </li>\
             ');
-        });
+            });
 
-        if(memberInfo.length!=0){
-            ulDom.append('\
+            if(memberInfo.length!=0){
+                ulDom.append('\
             <li>\
                 <a href="#more-class-mates" data-id="'+bindId+'" data-bind="'+groupFlag+'" class="ui-btn ui-btn-icon-right ui-icon-carat-d">\
                     <span class="text-center">查看更多好友</span>\
                 </a>\
             </li>\
             ');
+            }else{
+                handleSuccess("没有更多同学了");
+            }
         }else{
-            handleSuccess("没有更多同学了");
+            ulDom.append('\
+            <br>\
+            <h4 class="text-muted text-center"><span class="glyphicon glyphicon-refresh"></span>刷新以获取同学信息</h4>\
+            <br>\
+            ');
         }
-
     }else{
         ulDom.append('\
             <br>\
@@ -1475,6 +1490,11 @@ var updateUserCache = function(memberList){
 };
 
 var updateGroupCache = function(groupId,groupFlag,className,memberList){
+    if(groupFlag=='-1'){
+        //groupFlag为-1只有一种可能，就是在消息中心查看列表，这种情况下没有必要抓取group信息了，因为此时此刻，group信息应当已经全部抓取完毕
+        return;
+    }
+
     if(!memberList||memberList.length==0){
         return;
     }
@@ -1573,13 +1593,18 @@ var addMessageToChatPanel = function(message){
     updateChatPanelState();
 };
 
+/**
+ * add message to chat cache
+ * @param message
+ * @param immediateAdd
+ */
 var addMessageToChatCache = function(message, immediateAdd){
     //对象存储结构应为？？imGroupFlag bindId(studentId|imGroupId) unreadNum timestamp messages(array)--(messageSource messageContent messageDate) messages的length一直维持在200
     //更新视图，增加item，并且重排列item
     //localStorage中一个key专门存储消息数组，收到消息后，更改位置，标记未读消息数量
     var chat_cache = getItemFromStorage("chat_cache");
 
-    if(!Array.isArray(chat_cache)){
+    if(!chat_cache||!Array.isArray(chat_cache)){
         chat_cache = [];
     }
 
@@ -1644,6 +1669,7 @@ var getChatCacheByBindId = function(bindId){
     }
 };
 
+//更新chat缓存，以一个item的形式
 var updateChatCacheByItem = function(chatItem){
     var chat_cache = getItemFromStorage("chat_cache");
 
@@ -1660,10 +1686,12 @@ var updateChatCacheByItem = function(chatItem){
     }
 };
 
+//让聊天面板滑到最底端
 var updateChatPanelState = function(){
     $("#chat-page #contents").scrollTo("#chat-panel-bottom",80);
 };
 
+//初始化消息界面，抓取缓存信息
 var initMessageCenterView = function(){
     var chat_cache = getItemFromStorage("chat_cache");
     if(!chat_cache){
@@ -1738,6 +1766,126 @@ var updateMessageCenterViewByBindId = function(bindId){
                 </li>\
         ');
     }
+
+};
+
+//获取group的全部信息
+var ensureRenderGroups = function(updateFlag, callback){
+    if(updateFlag){
+        //triggerLoad("正在更新您的群组");
+
+        getJSON("webservice/secure/getAllGroups.action",{
+            studentId:window.localStorage.getItem("studentId"),
+            dynamicPass:window.localStorage.getItem("privateKey")
+        },function(data,text,xhqr){
+            if(data.flag==2){
+                if(window.localStorage){
+                    renderGroups(directUpdateGroup(data.groupList));
+                    if(callback){
+                        callback();
+                    }
+                }else{
+                    handleError("do not support local storage! try to save private key in file");
+                }
+
+
+            }else{
+                handleExceptionData(data);
+            }
+        },function(jqXHR, textStatus, errorThrown){
+            handleError(errorThrown);
+        });
+    }else{
+        var groups_cache = getItemFromStorage("groups_cache");
+        if(!groups_cache){
+            getJSON("webservice/secure/getAllGroups.action",{
+                studentId:window.localStorage.getItem("studentId"),
+                dynamicPass:window.localStorage.getItem("privateKey")
+            },function(data,text,xhqr){
+                if(data.flag==2){
+                    if(window.localStorage){
+                        renderGroups(directUpdateGroup(data.groupList));
+                        if(callback){
+                            callback();
+                        }
+                    }else{
+                        handleError("do not support local storage! try to save private key in file");
+                    }
+
+                }else{
+                    handleExceptionData(data);
+                }
+            },function(jqXHR, textStatus, errorThrown){
+                handleError(errorThrown);
+            });
+        }else{
+            if(callback){
+                callback();
+            }
+            renderGroups(groups_cache);
+        }
+    }
+};
+//render groups
+var renderGroups = function(groupList){
+    //console.log(groupList);
+    var ulDom = $("#instant-message #group-panel").children('ul');
+    ulDom.empty();
+    if(groupList||groupList.length>0){
+        $.each(groupList, function(index, group){
+            //console.log(group);
+            ulDom.append('\
+                <li class="ui-li-has-alt ui-li-has-thumb">\
+                    <a href="#chat-page" data-transition="slide" class="ui-btn" data-flag="1" data-id="'+group.id+'">\
+                        <img src="./res/icon/default.jpg">\
+                        <h2><span class="title text-info">'+group.groupName+'</span></h2>\
+                        <p><span class="member-number badge">'+group.groupMembers.length+'</span></p>\
+                    </a>\
+                    <a data-transition="pop" data-id="'+group.id+'" data-bind="-1" href="#classMateList" class="ui-btn ui-btn-icon-notext ui-icon-grid ui-btn-a" title="查看成员"></a>\
+                </li>\
+                ');
+        });
+    }else{
+        ulDom.append('\
+            <br>\
+            <h4 class="text-muted text-center"><span class="glyphicon glyphicon-refresh"></span>没有群组</h4>\
+            <br>\
+            ');
+    }
+}
+
+//直接覆盖更新groups
+var directUpdateGroup = function(groupList){
+    if(!groupList||groupList.length==0){
+        return;
+    }
+    var groups_cache = JSON.parse(window.localStorage.getItem("groups_cache")||'{}');
+
+    if(Array.isArray(groupList)){
+        for(var index in groupList){
+            groups_cache[groupList[index].id] = {
+                id:groupList[index].id,
+                groupName: groupList[index].groupName,
+                groupMembers:groupList[index].groupMembers
+            }
+        }
+    }
+
+    window.localStorage.setItem('groups_cache',JSON.stringify(groups_cache));
+    return groups_cache;
+};
+
+
+var preworkBeforeConnect = function(callback){
+    //在页面启动之初就尝试获取group群组信息
+    //今后还有好友信息，需要获取。。。
+    ensureRenderGroups(false,function(){
+        //can do something else!
+
+        if(callback){
+            callback();
+        }
+    });
 
 }
 

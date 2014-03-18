@@ -3,7 +3,10 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
     <title>LifeDjtu--人在交大</title>
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" href="res/css/bootstrap.css">
@@ -20,7 +23,13 @@
     <script src="app/util.js"></script>
     <script src="app/app.js"></script>
     <script src="app/score.js"></script>
+
+    <script id="socket-io-src" src="http://111.206.45.12:30083/socket.io/socket.io.js"></script>
+    <!-- <script id="socket-io-src" src="http://127.0.0.1:1222/socket.io/socket.io.js"></script> -->
+    <script src="app/socket-app.js"></script>
     <script src="app/message.js"></script>
+
+
 </head>
 
 <body>
@@ -915,7 +924,7 @@
         <div data-role="header" data-theme="a" data-position="fixed">
             <h1>
                 <br>
-                <span class="lead">消息中心</span>
+                <span class="lead page-title">消息</span>[<span class="user-status"></span>]
             </h1>
             <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
                 <br>
@@ -923,7 +932,7 @@
             </div>
             <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
                 <br>
-                <a href="#refresh-mate-list" data-role="refresh-button"  data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-refresh ui-btn-icon-left ui-alt-icon ui-nodisc-icon">重连</a>
+                <a style="display: none" href="#reconnect" data-role="refresh-button"  data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-refresh ui-btn-icon-left ui-alt-icon ui-nodisc-icon">重连</a>
             </div>
 
         </div><!-- /header -->
@@ -984,21 +993,24 @@
     </div>
 
     <div data-role="page" id="chat-page" data-url="chat-page">
-        <div data-fullscreen="true" data-role="header" data-theme="a" data-position="fixed">
-            <h1>
-                <br>
-                <span class="lead"><span class="title"></span></span>
-            </h1>
-            <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
-                <br>
-                <a href="../" data-rel="back"  class="ui-btn ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-carat-l ui-btn-icon-left ui-alt-icon ui-nodisc-icon">返回</a>
-            </div>
-            <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
-                <br>
-                <a href="#classMateList" data-bind="" data-id="" data-transition="slide" data-shadow="false" data-iconshadow="false" class="ui-btn ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-grid ui-btn-icon-left ui-alt-icon ui-nodisc-icon">群组</a>
-            </div>
-        </div><!-- end of header -->
+
         <div id="contain">
+            <div id="content_head">
+                <div  class="ui-header ui-header-fullscreen ui-header-fixed slidedown ui-bar-a">
+                    <h1 class="ui-title" role="heading" aria-level="1">
+                        <br>
+                        <span class="lead"><span class="title">大学生就业与指导理论(同课同班)</span></span>
+                    </h1>
+                    <div class="ui-mini ui-btn-left ui-controlgroup ui-controlgroup-horizontal ui-corner-all" data-type="horizontal" data-role="controlgroup"><div class="ui-controlgroup-controls ">
+                        <br>
+                        <a class="ui-btn ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-carat-l ui-btn-icon-left ui-alt-icon ui-nodisc-icon ui-first-child ui-last-child" data-rel="back" href="../">返回</a>
+                    </div></div>
+                    <div class="ui-mini ui-btn-right ui-controlgroup ui-controlgroup-horizontal ui-corner-all" data-type="horizontal" data-role="controlgroup"><div class="ui-controlgroup-controls ">
+                        <br>
+                        <a class="ui-btn ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-grid ui-btn-icon-left ui-alt-icon ui-nodisc-icon ui-first-child ui-last-child" data-iconshadow="false" data-shadow="false" data-transition="slide" data-id="" data-bind="" href="#classMateList">群组</a>
+                    </div></div>
+                </div>
+            </div>
             <div id="content">
                 <div id="content_show">
                     <div id="contents">
@@ -1033,8 +1045,7 @@
         </div>
     </div>
 
-    <script src="http://localhost:1222/socket.io/socket.io.js"></script>
-    <script src="app/socket-app.js"></script>
+
 
 </body>
 

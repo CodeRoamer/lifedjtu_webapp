@@ -22,106 +22,38 @@ $(function(){
         $("#instant-message div[role='main']").each(function(index, value){
             if($(this).attr('id')==id){
                 $(this).show();
+                var title;
+                if(id=='message-panel'){
+                    title = "消息";
+                }else if(id=="friend-panel"){
+                    title = "好友";
+                }else{
+                    title = "群组";
+                }
+                $("#instant-message .page-title").text(title);
             }else{
                 $(this).hide();
             }
         });
     }
-    //获取group的全部信息
-    var ensureRenderGroups = function(updateFlag){
-        if(updateFlag){
-            //triggerLoad("正在更新您的群组");
 
-            getJSON("webservice/secure/getAllGroups.action",{
-                studentId:window.localStorage.getItem("studentId"),
-                dynamicPass:window.localStorage.getItem("privateKey")
-            },function(data,text,xhqr){
-                if(data.flag==2){
-                    if(window.localStorage){
-                        renderGroups(directUpdateGroup(data.groupList));
+    //加载同学列表，此事件触发属于classDetail页面
+    $(document).on("click", "#group-panel a[href='#classMateList']", function(event){
+        console.log("here in list!");
 
-                    }else{
-                        handleError("do not support local storage! try to save private key in file");
-                    }
-                }else{
-                    handleExceptionData(data);
-                }
-            },function(jqXHR, textStatus, errorThrown){
-                handleError(errorThrown);
-            });
-        }else{
-            var groups_cache = getItemFromStorage("groups_cache");
-            if(!groups_cache){
-                getJSON("webservice/secure/getAllGroups.action",{
-                    studentId:window.localStorage.getItem("studentId"),
-                    dynamicPass:window.localStorage.getItem("privateKey")
-                },function(data,text,xhqr){
-                    if(data.flag==2){
-                        if(window.localStorage){
-                            renderGroups(directUpdateGroup(data.groupList));
+        var bindId = $(this).attr('data-id');
+        var groupFlag = $(this).attr("data-bind");
+        var courseName = $(this).prev('a').contents().find(".title").text();
 
-                        }else{
-                            handleError("do not support local storage! try to save private key in file");
-                        }
-                    }else{
-                        handleExceptionData(data);
-                    }
-                },function(jqXHR, textStatus, errorThrown){
-                    handleError(errorThrown);
-                });
-            }else{
-                renderGroups(groups_cache);
-            }
-        }
-    };
-    //render groups
-    var renderGroups = function(groupList){
-        //console.log(groupList);
-        var ulDom = $("#instant-message #group-panel").children('ul');
-        ulDom.empty();
-        if(groupList||groupList.length>0){
-            $.each(groupList, function(index, group){
-                //console.log(group);
-                ulDom.append('\
-                <li class="ui-li-has-alt ui-li-has-thumb">\
-                    <a href="#chat-page" data-transition="slide" class="ui-btn" data-flag="1" data-id="'+group.id+'">\
-                        <img src="./res/icon/default.jpg">\
-                        <h2><span class="title text-info">'+group.groupName+'</span></h2>\
-                        <p><span class="member-number badge">'+group.groupMembers.length+'</span></p>\
-                    </a>\
-                    <a data-transition="pop" data-id="'+group.id+'" data-bind="-1" href="#classMateList" class="ui-btn ui-btn-icon-notext ui-icon-grid ui-btn-a" title="查看成员"></a>\
-                </li>\
-                ');
-            });
-        }else{
-            ulDom.append('\
-            <br>\
-            <h4 class="text-muted text-center"><span class="glyphicon glyphicon-refresh"></span>没有群组</h4>\
-            <br>\
-            ');
-        }
-    }
+        //刷新按钮需要这两个参数！！！
+        $("#classMateList a[href='#refresh-mate-list']").attr("data-bind",groupFlag);
+        $("#classMateList a[href='#refresh-mate-list']").attr("data-id",bindId);
 
-    //直接覆盖更新groups
-    var directUpdateGroup = function(groupList){
-        if(!groupList||groupList.length==0){
-            return;
-        }
-        var groups_cache = JSON.parse(window.localStorage.getItem("groups_cache")||'{}');
 
-        if(Array.isArray(groupList)){
-            for(var index in groupList){
-                groups_cache[groupList[index].id] = {
-                    id:groupList[index].id,
-                    groupName: groupList[index].groupName,
-                    groupMembers:groupList[index].groupMembers
-                }
-            }
-        }
+        $("#classMateList .course-name").text(courseName);
 
-        window.localStorage.setItem('groups_cache',JSON.stringify(groups_cache));
-        return groups_cache;
-    };
+        ensureRenderClassMatesList(false,parseInt(groupFlag),bindId,courseName);
+    });
 
     //进入聊天界面前的准备工作
     $(document).on("click", "#instant-message a[href='#chat-page']", function(event){
@@ -156,7 +88,7 @@ $(function(){
         }
 
 
-        updateChatPanelState();
+        setTimeout(updateChatPanelState,50);
 
     });
 
@@ -170,8 +102,17 @@ $(function(){
         event.stopPropagation();
     });
 
+    $("#chat-page #input_content").click(function(event){
+        event.stopPropagation();
+
+        setTimeout(function(){
+            updateChatPanelState();
+        },200);
+    });
+
     //发消息
     $("#chat-page #say").click(function(event){
+        event.stopPropagation();
 
         var content = $("#chat-page #input_content").html();
         if(content.trim()==''){
@@ -193,17 +134,27 @@ $(function(){
             messageDate:messageDate
         }
 
-        addMessageToChatPanel(message);
-        addMessageToChatCache(message,true);
-        updateMessageCenterViewByBindId((groupFlag=='1'?groupId:source));
-        say(message);
+        if(say(message)){
+            addMessageToChatPanel(message);
+            addMessageToChatCache(message,true);
+            updateMessageCenterViewByBindId((groupFlag=='1'?groupId:source));
+            $("#chat-page #input_content").html('');
+        }
 
-        $("#chat-page #input_content").html('');
     });
 
+    $("#instant-message a[href='#reconnect']").click(function(event){
+        event.preventDefault();
+        if($(this).attr("disabled")){
+            return;
+        }
 
-    //在页面启动之初就尝试获取group群组信息
-    ensureRenderGroups(false);
+        $(this).attr("disabled","true");
+
+        reconnect();
+        //$(this).removeClass('ui-btn-active');
+    });
+
     initMessageCenterView();
 
 });

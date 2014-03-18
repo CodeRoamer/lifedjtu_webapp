@@ -40,16 +40,16 @@ $(function() {
             week+=passedWeeks;
             weekDay+=moreWeekDay;
 
-            console.log("before-week:"+week);
-            console.log("before-weekDay:"+weekDay);
+            //console.log("before-week:"+week);
+            //console.log("before-weekDay:"+weekDay);
 
             if(weekDay>7){
                 week+=parseInt(weekDay/7);
                 weekDay=parseInt(weekDay%7);
             }
 
-            console.log("week:"+week);
-            console.log("weekDay:"+weekDay);
+            //console.log("week:"+week);
+            //console.log("weekDay:"+weekDay);
 
             djtuDate.date.year = curDate.getFullYear();
             djtuDate.date.month = curDate.getMonth()+1;
