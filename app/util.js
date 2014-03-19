@@ -1777,8 +1777,9 @@ var initMessageCenterView = function(){
         <li class="ui-li-has-count ui-li-has-thumb">\
                     <a href="#chat-page" data-transition="slide" class="ui-btn" data-flag="'+chatItem.imGroupFlag+'" data-id="'+chatItem.bindId+'">\
                         <img src="./res/icon/default.jpg">\
-                        <h2><span class="title text-info">'+title+'</span>&nbsp;&nbsp;<small class="time">'+formatMessageTime(chatItem.timestamp)+'</small></h2>\
+                        <h2><span class="title text-info" style="font-size: 13px">'+title+'</span></h2>\
                         <p class="text-muted recentContent">'+(receiverUsername||chatItem.messages[chatItem.messages.length-1].messageSource)+':'+chatItem.messages[chatItem.messages.length-1].messageContent+'</p>\
+                        <p class="ui-li-aside time"><strong>'+formatMessageTime(chatItem.timestamp)+'</strong></p>\
                     </a>\
                     <span class="ui-li-count ui-body-b">'+(chatItem.unreadNum||0)+'</span>\
                 </li>\
@@ -1810,7 +1811,7 @@ var updateMessageCenterViewByBindId = function(bindId){
             var aDom = $(item).children('a');
             if(aDom.attr('data-id')==bindId){
                 aDom.next('.ui-li-count').text(chatItem.unreadNum||0);
-                aDom.contents().find('.time').text(formatMessageTime(chatItem.timestamp));
+                aDom.children('.time').html('<strong>'+(formatMessageTime(chatItem.timestamp))+'</strong>');
                 aDom.children('.recentContent').text((receiverUsername||chatItem.messages[chatItem.messages.length-1].messageSource)+':'+chatItem.messages[chatItem.messages.length-1].messageContent);
                 insertFlag = false;
                 ulDom.prepend($(item));
@@ -1827,8 +1828,9 @@ var updateMessageCenterViewByBindId = function(bindId){
         <li class="ui-li-has-count ui-li-has-thumb">\
                     <a href="#chat-page" data-transition="slide" class="ui-btn" data-flag="'+chatItem.imGroupFlag+'" data-id="'+chatItem.bindId+'">\
                         <img src="./res/icon/default.jpg">\
-                        <h2><span class="title text-info">'+title+'</span>&nbsp;&nbsp;<small class="time">'+formatMessageTime(chatItem.timestamp)+'</small></h2>\
+                        <h2><span class="title text-info" style="font-size: 13px">'+title+'</span></h2>\
                         <p class="text-muted recentContent">'+(receiverUsername||chatItem.messages[chatItem.messages.length-1].messageSource)+':'+chatItem.messages[chatItem.messages.length-1].messageContent+'</p>\
+                        <p class="ui-li-aside time"><strong>'+formatMessageTime(chatItem.timestamp)+'</strong></p>\
                     </a>\
                     <span class="ui-li-count ui-body-b">'+(chatItem.unreadNum||0)+'</span>\
                 </li>\

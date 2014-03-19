@@ -1,0 +1,186 @@
+<!DOCTYPE HTML>
+<html manifest="" lang="en-US">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
+    <title>LifeDjtu--人在交大</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="res/css/bootstrap.css">
+    <link rel="stylesheet" href="res/css/bootstrap-theme.css">
+    <link rel="stylesheet"  href="res/css/jquery.mobile-1.4.1.css">
+    <link rel="stylesheet" href="res/css/app.css">
+    <script src="res/js/jquery.js"></script>
+    <script src="res/js/jquery.mobile-1.4.1.js"></script>
+    <script src="res/js/bootstrap.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+
+    <script src="app/util.js"></script>
+
+</head>
+
+<body>
+<div></div>
+<div data-role="page" id="user-page" data-url="user-page">
+    <div data-role="header" data-theme="a" data-position="fixed">
+
+        <h1>
+            <br>
+            <span class="lead">设置</span>
+        </h1>
+        <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
+            <br>
+            <a href="../" data-rel="back"  class="ui-btn ui-shadow ui-corner-all ui-mini ui-btn-inline ui-icon-carat-l ui-btn-icon-left ui-alt-icon ui-nodisc-icon">返回</a>
+        </div>
+
+    </div><!-- /header -->
+
+    <div class="ui-content" data-role="main">
+        <form>
+            <ul data-role="listview" data-inset="false">
+                <li data-role="list-divider">设置并使用昵称，隐藏真实姓名和学号</li>
+                <li class="ui-field-contain">
+                    <label for="nickname">我的昵称:</label>
+                    <input name="nickname" id="nickname" value="Sunshinelins" data-clear-btn="true" type="text">
+                </li>
+                <li class="ui-field-contain">
+                    <label for="useNickname">使用昵称:</label>
+                    <select name="useNickname" id="useNickname" data-role="slider">
+                        <option value="false">否</option>
+                        <option value="true">是</option>
+                    </select>
+                </li>
+                <li data-role="list-divider">个性签名将会显示在个人页面中</li>
+                <li class="ui-field-contain">
+                    <label for="signature">我的个性签名:</label>
+                    <textarea cols="40" rows="8" name="signature" id="signature"></textarea>
+                </li>
+                <li data-role="list-divider">设置隐私权限保护个人隐私</li>
+                <li class="ui-field-contain">
+                    <label for="privacyPolicy" class="select">信息查看权限:</label>
+                    <select name="privacyPolicy" id="privacyPolicy">
+                        <option value="0">任何人不可见</option>
+                        <option value="1">仅对好友可见</option>
+                        <option value="2">任何人都可见</option>
+                    </select>
+                </li>
+                <li class="ui-field-contain">
+                    <label for="locationPolicy">分享位置信息:</label>
+                    <select name="locationPolicy" id="locationPolicy" data-role="slider">
+                        <option value="false">否</option>
+                        <option value="true">是</option>
+                    </select>
+                </li>
+                <li data-role="list-divider">开启或屏蔽群组消息，防骚扰</li>
+                <li class="ui-field-contain">
+                    <div class="ui-grid-b ui-responsive">
+                        <div class="ui-block-a"><label for="groupId">大学生就业指导与理论基础(同课同班)</label></div>
+                        <div class="ui-block-b"></div>
+                        <div class="ui-block-c">
+                            <select name="groupId" id="groupId" data-role="slider">
+                                <option value="false">屏蔽</option>
+                                <option value="true">接收</option>
+                            </select>
+                        </div>
+                    </div>
+                </li>
+                <li class="ui-field-contain">
+                    <div class="ui-grid-b ui-responsive">
+                        <div class="ui-block-a"><label for="groupId">大学生就业指导与理论基础(同课同班)</label></div>
+                        <div class="ui-block-b"></div>
+                        <div class="ui-block-c">
+                            <select name="groupId" id="groupId" data-role="slider">
+                                <option value="false">屏蔽</option>
+                                <option value="true">接收</option>
+                            </select>
+                        </div>
+                    </div>
+                </li>
+                <li class="ui-field-contain">
+                    <div class="ui-grid-b ui-responsive">
+                        <div class="ui-block-a"><label for="groupId">大学生就业指导与理论基础(同课同班)</label></div>
+                        <div class="ui-block-b"></div>
+                        <div class="ui-block-c">
+                            <select name="groupId" id="groupId" data-role="slider">
+                                <option value="false">屏蔽</option>
+                                <option value="true">接收</option>
+                            </select>
+                        </div>
+                    </div>
+                </li>
+                <li class="ui-field-contain">
+                    <div class="ui-grid-b ui-responsive">
+                        <div class="ui-block-a"><label for="groupId">大学生就业指导与理论基础(同课同班)</label></div>
+                        <div class="ui-block-b"></div>
+                        <div class="ui-block-c">
+                            <select name="groupId" id="groupId" data-role="slider">
+                                <option value="false">屏蔽</option>
+                                <option value="true">接收</option>
+                            </select>
+                        </div>
+                    </div>
+                </li>
+                <li class="ui-field-contain">
+                    <div class="ui-grid-b ui-responsive">
+                        <div class="ui-block-a"><label for="groupId">大学生就业指导与理论基础(同课同班)</label></div>
+                        <div class="ui-block-b"></div>
+                        <div class="ui-block-c">
+                            <select name="groupId" id="groupId" data-role="slider">
+                                <option value="false">屏蔽</option>
+                                <option value="true">接收</option>
+                            </select>
+                        </div>
+                    </div>
+                </li>
+                <li class="ui-field-contain">
+                    <div class="ui-grid-b ui-responsive">
+                        <div class="ui-block-a"><label for="groupId">大学生就业指导与理论基础(同课同班)</label></div>
+                        <div class="ui-block-b"></div>
+                        <div class="ui-block-c">
+                            <select name="groupId" id="groupId" data-role="slider">
+                                <option value="false">屏蔽</option>
+                                <option value="true">接收</option>
+                            </select>
+                        </div>
+                    </div>
+                </li>
+                <li class="ui-field-contain">
+                    <div class="ui-grid-b ui-responsive">
+                        <div class="ui-block-a"><label for="groupId">大学生就业指导与理论基础(同课同班)</label></div>
+                        <div class="ui-block-b"></div>
+                        <div class="ui-block-c">
+                            <select name="groupId" id="groupId" data-role="slider">
+                                <option value="false">屏蔽</option>
+                                <option value="true">接收</option>
+                            </select>
+                        </div>
+                    </div>
+                </li>
+                <li class="ui-field-contain">
+                    <div class="ui-grid-b ui-responsive">
+                        <div class="ui-block-a"><label for="groupId">大学生就业指导与理论基础(同课同班)</label></div>
+                        <div class="ui-block-b"></div>
+                        <div class="ui-block-c">
+                            <select name="groupId" id="groupId" data-role="slider">
+                                <option value="false">屏蔽</option>
+                                <option value="true">接收</option>
+                            </select>
+                        </div>
+                    </div>
+                </li>
+                <li data-role="list-divider">勿忘提交修改，否则无效</li>
+                <li class="ui-body ui-body-b">
+                    <fieldset class="ui-grid-a">
+                        <div class="ui-block-a"><button type="submit" class="ui-btn ui-corner-all ui-btn-a">重置</button></div>
+                        <div class="ui-block-b"><button type="submit" class="ui-btn ui-corner-all ui-btn-a">提交</button></div>
+                    </fieldset>
+                </li>
+            </ul>
+        </form>
+    </div>
+
+
+</div>
+
+</body>
+</html>
