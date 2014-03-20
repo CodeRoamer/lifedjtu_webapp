@@ -246,7 +246,7 @@ var getDjtuDate = function(){
 var getMySelfInfo = function(callback){
 
     if(!getItemFromStorage('userInfo')){
-        getJSON("webservice/secure/getMySelfInfo.action",{
+        getJSON("webservice/secure/local/getMySelfInfo.action",{
             studentId:getItemFromStorage('studentId'),
             dynamicPass:getItemFromStorage('privateKey')
         },function(data,text,xhqr){
@@ -1257,7 +1257,7 @@ var ensureRenderCourseInstance = function(updateFlag, courseAlias, courseRemoteI
     if(updateFlag){
         triggerLoad("正在获取课程信息");
 
-        getJSON("webservice/secure/getCourseInstance.action",{
+        getJSON("webservice/secure/local/getCourseInstance.action",{
             courseAlias:courseAlias,
             courseRemoteId:courseRemoteId,
             studentId:window.localStorage.getItem("studentId"),
@@ -1281,7 +1281,7 @@ var ensureRenderCourseInstance = function(updateFlag, courseAlias, courseRemoteI
         if(!window.localStorage.getItem('courseInstance_'+courseRemoteId)){
             triggerLoad("正在获取课程信息");
 
-            getJSON("webservice/secure/getCourseInstance.action",{
+            getJSON("webservice/secure/local/getCourseInstance.action",{
                 courseAlias:courseAlias,
                 courseRemoteId:courseRemoteId,
                 studentId:window.localStorage.getItem("studentId"),
@@ -1421,7 +1421,7 @@ var ensureRenderClassMatesList = function(updateFlag,groupFlag,bindId,courseName
     if(updateFlag){
         triggerLoad("正在获取同学列表");
 
-        getJSON('webservice/secure/getGroupMembers.action',{
+        getJSON('webservice/secure/local/getGroupMembers.action',{
             bindId:bindId,
             studentId:window.localStorage.getItem("studentId"),
             dynamicPass:window.localStorage.getItem("privateKey"),
@@ -1844,7 +1844,7 @@ var ensureRenderGroups = function(updateFlag, callback){
     if(updateFlag){
         //triggerLoad("正在更新您的群组");
 
-        getJSON("webservice/secure/getAllGroups.action",{
+        getJSON("webservice/secure/local/getAllGroups.action",{
             studentId:window.localStorage.getItem("studentId"),
             dynamicPass:window.localStorage.getItem("privateKey")
         },function(data,text,xhqr){
@@ -1868,7 +1868,7 @@ var ensureRenderGroups = function(updateFlag, callback){
     }else{
         var groups_cache = getItemFromStorage("groups_cache");
         if(!groups_cache){
-            getJSON("webservice/secure/getAllGroups.action",{
+            getJSON("webservice/secure/local/getAllGroups.action",{
                 studentId:window.localStorage.getItem("studentId"),
                 dynamicPass:window.localStorage.getItem("privateKey")
             },function(data,text,xhqr){
