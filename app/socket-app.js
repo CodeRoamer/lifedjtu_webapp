@@ -62,10 +62,11 @@ function showMeOffline(showNote){
 
     if(showNote)
         handleWarning("您已经断开连接");
-    $("#instant-message .user-status").removeClass("text-success");
-    $("#instant-message .user-status").removeClass("text-warning");
-    $("#instant-message .user-status").addClass("text-danger");
-    $("#instant-message .user-status").text("离线");
+    var header = $("#instant-message");
+    header.find(".user-status").removeClass("text-success");
+    header.find(".user-status").removeClass("text-warning");
+    header.find(".user-status").addClass("text-danger");
+    header.find(".user-status").text("离线");
     stopLoad();
     onlineFlag = false;
 

@@ -8,8 +8,8 @@
 
 
 //global host
-//var globalHost = "http://localhost:9119/lifedjtu/";
-var globalHost = "http://lifedjtu.duapp.com/";
+var globalHost = "http://localhost:8080/";
+//var globalHost = "http://lifedjtu.duapp.com/";
 
 var getItemFromStorage = function(item){
     var cache = window.localStorage.getItem(item);
@@ -216,7 +216,7 @@ var handleError = function(message){
 
 var handleNeedLogin = function(){
     //$.mobile.navigate('./');
-    window.location.href='temp-signin.html';
+    //window.location.href='temp-signin.html';
 
 };
 
