@@ -8,7 +8,7 @@
 
 
 //global host
-var globalHost = "http://localhost:8080/";
+var globalHost = "http://115.28.83.115:9090/";
 //var globalHost = "http://lifedjtu.duapp.com/";
 
 var getItemFromStorage = function(item){
